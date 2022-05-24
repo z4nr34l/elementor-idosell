@@ -150,6 +150,13 @@ class RetailPrice extends \Elementor\Core\DynamicTags\Tag ***REMOVED***
 				'type' => 'text',
 			]
 		);
+		$this->add_control(
+			'currency',
+			[
+				'label' => esc_html__( 'Currency', 'elementor-idosell-retail-price-tag' ),
+				'type' => 'text',
+			]
+		);
 ***REMOVED***
 
 	/**
@@ -163,7 +170,7 @@ class RetailPrice extends \Elementor\Core\DynamicTags\Tag ***REMOVED***
 	 * @access public
 	 */
 	public function render() ***REMOVED***
-		?><p>***REMOVED*** echo number_format($this->getExternalData($this->get_settings('sku')), 2, ',', ' '); ?> PLN</p>***REMOVED***
+		?><p>***REMOVED*** echo number_format($this->getExternalData($this->get_settings('sku')), 2, ',', ' '); ?> ***REMOVED*** echo $this->get_settings('currency') ?></p>***REMOVED***
 ***REMOVED***
 
 ***REMOVED***
