@@ -1,0 +1,24 @@
+{
+  "name": "z4nr34l/elementor-idosell",
+  "minimum-stability": "stable",
+  "prefer-stable": true,
+  "type": "wordpress-plugin",
+  "autoload": {
+    "psr-4": {
+      "ElementorIdosell\\": "src/"
+    }
+  },
+  "require": {
+    "php": ">=7.4",
+    "yahnis-elsts/plugin-update-checker": "^4.11",
+    "ext-json": "*",
+    "ext-curl": "*"
+  },
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Mateusz \"Z4RN34L\" Janota",
+      "email": "software@zanreal.pl"
+    }
+  ]
+}
