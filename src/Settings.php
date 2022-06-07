@@ -49,7 +49,7 @@ class Settings
           submit_button();
           ?>
         </form>
-        <a href="<?php echo admin_url();?>options-general.php?page=idosell&idosell_import=1" class="button button-secondary">Importuj</a>
+        <a href="<?php echo admin_url();?>options-general.php?page=idosell&idosell_import=1" class="button button-secondary">Import</a>
       </div>
   <?php }
 
