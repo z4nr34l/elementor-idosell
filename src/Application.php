@@ -10,7 +10,6 @@ if ( ! defined( 'ABSPATH' ) ) ***REMOVED***
 
 class Application
 ***REMOVED***
-
 	public function registerActions()
   ***REMOVED***
   ***REMOVED***
@@ -19,5 +18,6 @@ class Application
   ***REMOVED***
 	  $settings = new Settings();
 		$tags = new Tags();
+		$importer = new Importer();
   ***REMOVED***
 ***REMOVED***

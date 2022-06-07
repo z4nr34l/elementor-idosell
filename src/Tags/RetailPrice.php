@@ -17,10 +17,6 @@ if ( ! defined( 'ABSPATH' ) ) ***REMOVED***
  */
 class RetailPrice extends \Elementor\Core\DynamicTags\Tag ***REMOVED***
 
-	/**
-	 * Plugin options from settings
-	 * @var
-	 */
 ***REMOVED***
 
 	/**
@@ -29,7 +25,6 @@ class RetailPrice extends \Elementor\Core\DynamicTags\Tag ***REMOVED***
 	 */
 	public function __construct( array $data = [] ) ***REMOVED***
 		parent::__construct( $data );
-***REMOVED***
 ***REMOVED***
 
 	/**
@@ -87,50 +82,27 @@ class RetailPrice extends \Elementor\Core\DynamicTags\Tag ***REMOVED***
 		];
 ***REMOVED***
 
-	protected function getExternalData($SKU) ***REMOVED***
-		try ***REMOVED***
-***REMOVED***
+	protected function getData($input) ***REMOVED***
+    global $wpdb;
 
-***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***
-			$request['params']['returnProducts'] = "active";
-			$request['params']['productParams'] = array();
-			$request['params']['productParams'][0] = array();
-			$request['params']['productParams'][0]['productCode'] = $SKU;
-***REMOVED***
-			$request['params']['returnElements'][0] = "retail_price";
-
-***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***
-
-***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***
-
-***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***
-			$json = json_decode($body, true);
-
-			return $json['results'][0]['productRetailPrice'];
-***REMOVED*** catch(Exception $exception) ***REMOVED***
-***REMOVED***
-***REMOVED***
+    if(isset($input)) ***REMOVED***
+      $cache = wp_cache_get($input, 'idosell_prices');
+	    if($cache) ***REMOVED***
+		    return $cache;
+	    ***REMOVED*** else ***REMOVED***
+		    try ***REMOVED***
+			    $sql = "SELECT `price` FROM " . $wpdb->prefix.$this->table_name . " WHERE `id` LIKE %s OR `code_producer` LIKE %s";
+			    $sql = $wpdb->prepare($sql, $input, $input);
+          $result = $wpdb->get_results($sql)[0]->price;
+          wp_cache_set($input, $result, 'idosell_prices', 86400);
+			    return $result;
+		    ***REMOVED*** catch(Exception $exception) ***REMOVED***
+			    throw $exception;
+		    ***REMOVED***
+	    ***REMOVED***
+    ***REMOVED*** else ***REMOVED***
+      return null;
+    ***REMOVED***
 ***REMOVED***
 
 	/**
@@ -144,9 +116,16 @@ class RetailPrice extends \Elementor\Core\DynamicTags\Tag ***REMOVED***
 	 */
 	protected function register_controls() ***REMOVED***
 		$this->add_control(
-			'sku',
+			'prefix',
 			[
-				'label' => esc_html__( 'SKU', 'elementor-idosell-retail-price-tag' ),
+				'label' => esc_html__( 'Prefix', 'elementor-idosell-retail-price-tag' ),
+				'type' => 'text',
+			]
+		);
+		$this->add_control(
+			'input',
+			[
+				'label' => esc_html__( 'Producer/Product ID', 'elementor-idosell-retail-price-tag' ),
 				'type' => 'text',
 			]
 		);
@@ -170,7 +149,7 @@ class RetailPrice extends \Elementor\Core\DynamicTags\Tag ***REMOVED***
 	 * @access public
 	 */
 	public function render() ***REMOVED***
-		?><p>***REMOVED*** echo number_format($this->getExternalData($this->get_settings('sku')), 2, ',', ' '); ?> ***REMOVED*** echo $this->get_settings('currency') ?></p>***REMOVED***
+		?><p>***REMOVED*** echo $this->get_settings('prefix') ?>***REMOVED*** echo number_format((float) $this->getData($this->get_settings('input')), 2, ',', ' '); ?>***REMOVED*** echo $this->get_settings('currency') ?></p>***REMOVED***
 ***REMOVED***
 
 ***REMOVED***

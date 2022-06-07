@@ -5,119 +5,99 @@
 class Settings
 ***REMOVED***
 
-    private $options;
+  private $options;
 
-    public function __construct()
-    ***REMOVED***
-        add_action('admin_menu', [$this, 'addPluginPage']);
-        add_action('admin_init', [$this, 'pageInit']);
-    ***REMOVED***
+	public function successNotice() ***REMOVED***
+		?>
+    <div class="notice notice-success is-dismissible">
+      <p>***REMOVED*** _e( 'Synchronized!', 'idosell' ); ?></p>
+    </div>
+		***REMOVED***
+***REMOVED***
 
-    public function addPluginPage()
+  public function __construct()
+  ***REMOVED***
+    $this->options = get_option('idosell');
+    add_action('admin_menu', [$this, 'addPluginPage']);
+    add_action('admin_init', [$this, 'pageInit']);
+    if(isset($_GET['sync']) && $_GET['sync'] === 1) ***REMOVED***
+	    add_action( 'admin_notices', [$this, 'successNotice'] );
     ***REMOVED***
-        add_options_page(
-            'IdoSell', // page_title
-            'IdoSell', // menu_title
-            'manage_options', // capability
-            'idosell', // menu_slug
-            [$this, 'createAdminPage']
-        );
-    ***REMOVED***
+  ***REMOVED***
 
-    public function createAdminPage(): void
-    ***REMOVED***
-        $this->options = get_option('idosell'); ?>
+  public function addPluginPage()
+  ***REMOVED***
+    add_options_page(
+      'IdoSell',
+      'IdoSell',
+      'manage_options',
+      'idosell',
+      [$this, 'createAdminPage']
+    );
+  ***REMOVED***
 
-        <div class="wrap">
-            <h2>Idosell integration by <a href="https://www.zanreal.pl/">Z4NR34L</a></h2>
-            <form method="post" action="options.php">
-                ***REMOVED***
-                settings_fields('idosell');
-                do_settings_sections('idosell-admin');
-                submit_button();
-                ?>
-            </form>
-        </div>
-    ***REMOVED*** ***REMOVED***
+  public function createAdminPage(): void
+  ***REMOVED***
+    ?>
 
-    public function pageInit()
-    ***REMOVED***
-        register_setting(
-            'idosell',
-            'idosell',
-            [$this, 'sanitize']
-        );
+      <div class="wrap">
+        <h2>Idosell integration by <a href="https://www.zanreal.pl/">Z4NR34L</a></h2>
+        <form method="post" action="options.php">
+          ***REMOVED***
+          settings_fields('idosell');
+          do_settings_sections('idosell-admin');
+          submit_button();
+          ?>
+        </form>
+        <a href="***REMOVED*** echo admin_url();?>options-general.php?page=idosell&idosell_import=1" class="button button-secondary">Importuj</a>
+      </div>
+  ***REMOVED*** ***REMOVED***
 
-        add_settings_section(
-            'main_section',
-            'Ogólne',
-            [$this, 'sectionInfo'],
-            'idosell-admin'
-        );
+  public function pageInit()
+  ***REMOVED***
 
-        add_settings_field(
-            'gateway_url',
-            'Gateway URL',
-            [$this, 'gatewayUrlCallback'],
-            'idosell-admin',
-            'main_section'
-        );
-        add_settings_field(
-            'login',
-            'Login',
-            [$this, 'loginCallback'],
-            'idosell-admin',
-            'main_section'
-        );
-        add_settings_field(
-            'password',
-            'Password',
-            [$this, 'passwordCallback'],
-            'idosell-admin',
-            'main_section'
-        );
+      register_setting(
+          'idosell',
+          'idosell',
+          [$this, 'sanitize']
+      );
 
-    ***REMOVED***
+      add_settings_section(
+          'main_section',
+          'Ogólne',
+          [$this, 'sectionInfo'],
+          'idosell-admin'
+      );
 
-    public function sanitize($input): array
-    ***REMOVED***
-        $sanitary_values = [];
-        if (isset($input['gateway_url'])) ***REMOVED***
-            $sanitary_values['gateway_url'] = sanitize_text_field($input['gateway_url']);
-        ***REMOVED***
-        if (isset($input['login'])) ***REMOVED***
-            $sanitary_values['login'] = sanitize_text_field($input['login']);
-        ***REMOVED***
-        if (isset($input['password'])) ***REMOVED***
-            $sanitary_values['password'] = sanitize_text_field($input['password']);
-        ***REMOVED***
-        return $sanitary_values;
-    ***REMOVED***
+      add_settings_field(
+          'xml_url',
+          'XML URL',
+          [$this, 'xmlUrlCallback'],
+          'idosell-admin',
+          'main_section'
+      );
 
-    public function sectionInfo(): void
-    ***REMOVED***
-    ***REMOVED***
+  ***REMOVED***
 
-    public function gatewayUrlCallback(): void
-    ***REMOVED***
-        printf(
-            '<input class="regular-text" type="text" name="idosell[gateway_url]" id="idosell_gateway_url" value="%s">',
-            isset($this->options['gateway_url']) ? esc_attr($this->options['gateway_url']) : ''
-        );
-    ***REMOVED***
-    public function loginCallback(): void
-    ***REMOVED***
-        printf(
-            '<input class="regular-text" type="text" name="idosell[login]" id="idosell_login" value="%s">',
-            isset($this->options['login']) ? esc_attr($this->options['login']) : ''
-        );
-    ***REMOVED***
-    public function passwordCallback(): void
-    ***REMOVED***
-        printf(
-            '<input class="regular-text" type="password" name="idosell[password]" id="idosell_password">',
-            isset($this->options['password']) ? esc_attr($this->options['password']) : ''
-        );
-    ***REMOVED***
+  public function sanitize($input): array
+  ***REMOVED***
+      $sanitary_values = [];
+      if (isset($input['xml_url'])) ***REMOVED***
+          $sanitary_values['xml_url'] = sanitize_text_field($input['xml_url']);
+      ***REMOVED***
+      return $sanitary_values;
+  ***REMOVED***
+
+  public function sectionInfo(): void
+  ***REMOVED***
+  ***REMOVED***
+
+  public function xmlUrlCallback(): void
+  ***REMOVED***
+      printf(
+          '<input class="regular-text" type="text" name="idosell[xml_url]" id="idosell_xml_url" value="%s">',
+          isset($this->options['xml_url']) ? esc_attr($this->options['xml_url']) : ''
+      );
+  ***REMOVED***
 
 ***REMOVED***
