@@ -10,7 +10,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class Application
 {
-
 	public function registerActions()
   {
   }
@@ -19,5 +18,6 @@ class Application
   {
 	  $settings = new Settings();
 		$tags = new Tags();
+		$importer = new Importer();
   }
 }

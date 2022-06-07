@@ -17,11 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class RetailPrice extends \Elementor\Core\DynamicTags\Tag {
 
-	/**
-	 * Plugin options from settings
-	 * @var
-	 */
-	private $options;
+	public string $table_name = "idosell_products";
 
 	/**
 	 * Class constructor
@@ -29,7 +25,6 @@ class RetailPrice extends \Elementor\Core\DynamicTags\Tag {
 	 */
 	public function __construct( array $data = [] ) {
 		parent::__construct( $data );
-		$this->options = get_option('idosell');
 	}
 
 	/**
@@ -87,50 +82,27 @@ class RetailPrice extends \Elementor\Core\DynamicTags\Tag {
 		];
 	}
 
-	protected function getExternalData($SKU) {
-		try {
-			$address = $this->options['gateway_url'];
+	protected function getData($input) {
+    global $wpdb;
 
-			$request = array();
-			$request['authenticate'] = array();
-			$request['authenticate']['userLogin'] = $this->options['login'];
-			$request['authenticate']['authenticateKey'] = sha1(date('Ymd') . sha1($this->options['password']));
-			$request['params'] = array();
-			$request['params']['returnProducts'] = "active";
-			$request['params']['productParams'] = array();
-			$request['params']['productParams'][0] = array();
-			$request['params']['productParams'][0]['productCode'] = $SKU;
-			$request['params']['returnElements'] = array();
-			$request['params']['returnElements'][0] = "retail_price";
-
-			$request_json = json_encode($request);
-			$headers = array(
-				'Accept: application/json',
-				'Content-Type: application/json;charset=UTF-8'
-			);
-
-			$curl = curl_init($address);
-			curl_setopt($curl, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
-			curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-			curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-			curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
-			curl_setopt($curl, CURLOPT_FORBID_REUSE, 1);
-			curl_setopt($curl, CURLINFO_HEADER_OUT, 1);
-			curl_setopt($curl, CURLOPT_HEADER, 1);
-			curl_setopt($curl, CURLOPT_POST, 1);
-			curl_setopt($curl, CURLOPT_POSTFIELDS, $request_json);
-			curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
-
-			$response = curl_exec($curl);
-			$header_size = curl_getinfo($curl, CURLINFO_HEADER_SIZE);
-			$body = substr($response, $header_size);
-			curl_close($curl);
-			$json = json_decode($body, true);
-
-			return $json['results'][0]['productRetailPrice'];
-		} catch(Exception $exception) {
-			throw $exception;
-		}
+    if(isset($input)) {
+      $cache = wp_cache_get($input, 'idosell_prices');
+	    if($cache) {
+		    return $cache;
+	    } else {
+		    try {
+			    $sql = "SELECT `price` FROM " . $wpdb->prefix.$this->table_name . " WHERE `id` LIKE %s OR `code_producer` LIKE %s";
+			    $sql = $wpdb->prepare($sql, $input, $input);
+          $result = $wpdb->get_results($sql)[0]->price;
+          wp_cache_set($input, $result, 'idosell_prices', 86400);
+			    return $result;
+		    } catch(Exception $exception) {
+			    throw $exception;
+		    }
+	    }
+    } else {
+      return null;
+    }
 	}
 
 	/**
@@ -144,9 +116,16 @@ class RetailPrice extends \Elementor\Core\DynamicTags\Tag {
 	 */
 	protected function register_controls() {
 		$this->add_control(
-			'sku',
+			'prefix',
 			[
-				'label' => esc_html__( 'SKU', 'elementor-idosell-retail-price-tag' ),
+				'label' => esc_html__( 'Prefix', 'elementor-idosell-retail-price-tag' ),
+				'type' => 'text',
+			]
+		);
+		$this->add_control(
+			'input',
+			[
+				'label' => esc_html__( 'Producer/Product ID', 'elementor-idosell-retail-price-tag' ),
 				'type' => 'text',
 			]
 		);
@@ -170,7 +149,7 @@ class RetailPrice extends \Elementor\Core\DynamicTags\Tag {
 	 * @access public
 	 */
 	public function render() {
-		?><p><?php echo number_format($this->getExternalData($this->get_settings('sku')), 2, ',', ' '); ?> <?php echo $this->get_settings('currency') ?></p><?php
+		?><p><?php echo $this->get_settings('prefix') ?><?php echo number_format((float) $this->getData($this->get_settings('input')), 2, ',', ' '); ?><?php echo $this->get_settings('currency') ?></p><?php
 	}
 
 }
