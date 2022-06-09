@@ -113,7 +113,36 @@ class Importer
 				$async_urls[] = admin_url()."/options-general.php?page=idosell&idosell_async_import=1&idosell_async_page=" . $i;
 			}
 
-			echo "<style>html,body {margin: 0; padding: 0; position: relative;}</style><div style='width: 100vw; height: 100vh; display: flex; flex-direction: column; align-content: center; justify-content: center;'><p style='font-size: 21px; text-align: center; margin: 0;'>Sync progress:</p><p style='text-align: center; margin: 0; font-size: 42px; font-weight: 800;' id='progress-percentage'>0 %</p><p style='font-size: 14px; margin: 25px 0 0 0; text-align: center;'>(don't close the window, will close itself when finished)</p></div><script type='text/javascript'>let initData = { currentPage: 0, maxPages: parseInt('".$data['resultsNumberPage']."'), apiEndpoints: ".json_encode($async_urls)." };  function setProgress() { document.getElementById('progress-percentage').innerText = ((initData.currentPage / initData.maxPages) * 100).toFixed(2) + ' %'; } setProgress(); let xhr = [], i; window.onload = function() { initData.apiEndpoints.forEach((endpoint, i) => { xhr[i] = new XMLHttpRequest(); xhr[i].open('GET', new URL(endpoint), false); xhr[i].onreadystatechange = function() {if(xhr[i].readyState === 4 && xhr[i].status === 200) { initData.currentPage++; if(initData.currentPage === initData.maxPages){window.close('','_parent','');} else {setProgress();} }}; xhr[i].send(); }); }</script>";
+			echo "<style>html,body {margin: 0; padding: 0; position: relative;}</style><div style='width: 100vw; height: 100vh; display: flex; flex-direction: column; align-content: center; justify-content: center;'><p style='font-size: 21px; text-align: center; margin: 0;'>Sync progress:</p><p style='text-align: center; margin: 0; font-size: 42px; font-weight: 800;' id='progress-percentage'>0 %</p><p style='font-size: 14px; margin: 25px 0 0 0; text-align: center;'>(don't close the window, will close itself when finished)</p></div>
+						<script type='text/javascript'>
+						let initData = { 
+            	currentPage: 0, 
+            	maxPages: parseInt('".$data['resultsNumberPage']."'), 
+            	apiEndpoints: ".json_encode($async_urls)." 
+            }; 
+            let xhr = [], i;
+            function getData() {
+              xhr = new XMLHttpRequest();
+              xhr.open('GET', new URL(initData.apiEndpoints[0]), true);
+              xhr.onreadystatechange = function() {
+                if(xhr.readyState === 4 && xhr.status === 200) { 
+                  initData.currentPage++;
+                  initData.apiEndpoints.shift();
+                  if(initData.currentPage === initData.maxPages){ 
+                    window.close('','_parent','');
+                  } else {
+                    getData();
+                  }
+                }
+                document.getElementById('progress-percentage').innerText = ((initData.currentPage / initData.maxPages) * 100).toFixed(2) + ' %';
+              };
+              xhr.send();
+            }
+            window.onload = function() { 
+              getData();
+            }
+            </script>
+						";
     } catch(Exception $exception) {
 			error_log($exception);
 			wp_redirect(admin_url().'options-general.php?page=idosell&sync=0');
@@ -126,14 +155,14 @@ class Importer
 		global $wpdb;
 
 		try {
-			$data     = $this->getAPIData($page);
-			$products = $data['results'];
-
-			foreach($products as $product) {
-				$sql    = "INSERT INTO " . $wpdb->prefix.$this->table_name . " (id, code_producer, product_sizecode, sku, price) VALUES (%d, %s, %s, %s, %f) ON DUPLICATE KEY UPDATE price = %f";
-				$upsert = $wpdb->prepare($sql, $product['productId'], $product['productSizesAttributes'][0]['productSizeCodeExternal'] ?: "", $product['productSizesAttributes'][0]['productSizeCodeProducer'] ?: "", $product['productDisplayedCode'] ?: "", $product['productRetailPrice'] ?: null, $product['productRetailPrice'] ?: null);
-				$wpdb->query($upsert);
-			}
+//			$data     = $this->getAPIData($page);
+//			$products = $data['results'];
+//
+//			foreach($products as $product) {
+//				$sql    = "INSERT INTO " . $wpdb->prefix.$this->table_name . " (id, code_producer, product_sizecode, sku, price) VALUES (%d, %s, %s, %s, %f) ON DUPLICATE KEY UPDATE price = %f";
+//				$upsert = $wpdb->prepare($sql, $product['productId'], $product['productSizesAttributes'][0]['productSizeCodeExternal'] ?: "", $product['productSizesAttributes'][0]['productSizeCodeProducer'] ?: "", $product['productDisplayedCode'] ?: "", $product['productRetailPrice'] ?: null, $product['productRetailPrice'] ?: null);
+//				$wpdb->query($upsert);
+//			}
 
 			echo "ok";
 			exit;
