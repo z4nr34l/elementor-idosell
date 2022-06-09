@@ -155,14 +155,14 @@ class Importer
 		global $wpdb;
 
 		try {
-//			$data     = $this->getAPIData($page);
-//			$products = $data['results'];
-//
-//			foreach($products as $product) {
-//				$sql    = "INSERT INTO " . $wpdb->prefix.$this->table_name . " (id, code_producer, product_sizecode, sku, price) VALUES (%d, %s, %s, %s, %f) ON DUPLICATE KEY UPDATE price = %f";
-//				$upsert = $wpdb->prepare($sql, $product['productId'], $product['productSizesAttributes'][0]['productSizeCodeExternal'] ?: "", $product['productSizesAttributes'][0]['productSizeCodeProducer'] ?: "", $product['productDisplayedCode'] ?: "", $product['productRetailPrice'] ?: null, $product['productRetailPrice'] ?: null);
-//				$wpdb->query($upsert);
-//			}
+			$data     = $this->getAPIData($page);
+			$products = $data['results'];
+
+			foreach($products as $product) {
+				$sql    = "INSERT INTO " . $wpdb->prefix.$this->table_name . " (id, code_producer, product_sizecode, sku, price) VALUES (%d, %s, %s, %s, %f) ON DUPLICATE KEY UPDATE price = %f";
+				$upsert = $wpdb->prepare($sql, $product['productId'], $product['productSizesAttributes'][0]['productSizeCodeExternal'] ?: "", $product['productSizesAttributes'][0]['productSizeCodeProducer'] ?: "", $product['productDisplayedCode'] ?: "", $product['productRetailPrice'] ?: null, $product['productRetailPrice'] ?: null);
+				$wpdb->query($upsert);
+			}
 
 			echo "ok";
 			exit;
