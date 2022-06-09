@@ -91,8 +91,8 @@ class RetailPrice extends \Elementor\Core\DynamicTags\Tag {
 		    return $cache;
 	    } else {
 		    try {
-			    $sql = "SELECT `price` FROM " . $wpdb->prefix.$this->table_name . " WHERE `id` LIKE %s OR `code_producer` LIKE %s";
-			    $sql = $wpdb->prepare($sql, $input, $input);
+			    $sql = "SELECT `price` FROM " . $wpdb->prefix.$this->table_name . " WHERE `id` LIKE %s OR `product_sizecode` LIKE %s OR `sku` LIKE %s OR `code_producer` LIKE %s";
+			    $sql = $wpdb->prepare($sql, $input, $input, $input, $input);
           $result = $wpdb->get_results($sql)[0]->price;
           wp_cache_set($input, $result, 'idosell_prices', 86400);
 			    return $result;
