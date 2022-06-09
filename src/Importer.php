@@ -110,7 +110,7 @@ class Importer
 			}
 			
 			for ($i = 1; $i <= $data['resultsNumberPage']; $i++) {
-				$async_urls[] = "https://dev.test/wp-admin/options-general.php?page=idosell&idosell_async_import=1&idosell_async_page=" . $i;
+				$async_urls[] = admin_url()."/options-general.php?page=idosell&idosell_async_import=1&idosell_async_page=" . $i;
 			}
 
 			echo "<style>html,body {margin: 0; padding: 0; position: relative;}</style><div style='width: 100vw; height: 100vh; display: flex; flex-direction: column; align-content: center; justify-content: center;'><p style='font-size: 21px; text-align: center; margin: 0;'>Sync progress:</p><p style='text-align: center; margin: 0; font-size: 42px; font-weight: 800;' id='progress-percentage'>0 %</p><p style='font-size: 14px; margin: 25px 0 0 0; text-align: center;'>(don't close the window, will close itself when finished)</p></div><script type='text/javascript'>let initData = { currentPage: 0, maxPages: parseInt('".$data['resultsNumberPage']."'), apiEndpoints: ".json_encode($async_urls)." };  function setProgress() { document.getElementById('progress-percentage').innerText = ((initData.currentPage / initData.maxPages) * 100).toFixed(2) + ' %'; } setProgress(); let xhr = [], i; initData.apiEndpoints.forEach((endpoint, i) => { xhr[i] = new XMLHttpRequest(); xhr[i].open('GET', new URL(endpoint), true); xhr[i].onreadystatechange = function() {if(xhr[i].readyState === 4 && xhr[i].status === 200) { initData.currentPage++; if(initData.currentPage === initData.maxPages){window.close('','_parent','');} else {setProgress();} }}; xhr[i].send(); })</script>";
