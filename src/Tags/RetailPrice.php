@@ -82,26 +82,35 @@ class RetailPrice extends \Elementor\Core\DynamicTags\Tag {
 		];
 	}
 
-	protected function getData($input) {
-    global $wpdb;
+  protected function getDbData($input) {
+	  global $wpdb;
 
-    if(isset($input)) {
-      $cache = wp_cache_get($input, 'idosell_prices');
-	    if($cache) {
-		    return $cache;
-	    } else {
-		    try {
-			    $sql = "SELECT `price` FROM " . $wpdb->prefix.$this->table_name . " WHERE `id` LIKE %s OR `product_sizecode` LIKE %s OR `sku` LIKE %s OR `code_producer` LIKE %s";
-			    $sql = $wpdb->prepare($sql, $input, $input, $input, $input);
-          $result = $wpdb->get_results($sql)[0]->price;
-          wp_cache_set($input, $result, 'idosell_prices', 86400);
-			    return $result;
-		    } catch(Exception $exception) {
-			    throw $exception;
-		    }
-	    }
+	  $cache = wp_cache_get($input, 'idosell_prices');
+	  if($cache) {
+		  return $cache;
+	  } else {
+		  try {
+			  $sql = "SELECT `price` FROM " . $wpdb->prefix.$this->table_name . " WHERE `id` LIKE %s OR `product_sizecode` LIKE %s OR `sku` LIKE %s OR `code_producer` LIKE %s";
+			  $sql = $wpdb->prepare($sql, $input, $input, $input, $input);
+			  $result = $wpdb->get_results($sql)[0]->price;
+			  wp_cache_set($input, $result, 'idosell_prices', 86400);
+			  return $result;
+		  } catch(Exception $exception) {
+			  throw $exception;
+		  }
+	  }
+  }
+
+	protected function getData($input) {
+    if(isset($input) && $input !== "") {
+      return $this->getDbData($input);
     } else {
-      return null;
+      $acf_field = get_field('product_in');
+      if(isset($acf_field) && $acf_field !== "") {
+	      return $this->getDbData($acf_field);
+      } else {
+	      return null;
+      }
     }
 	}
 
