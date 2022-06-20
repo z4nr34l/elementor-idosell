@@ -82,26 +82,35 @@ class RetailPrice extends \Elementor\Core\DynamicTags\Tag ***REMOVED***
 		];
 ***REMOVED***
 
-	protected function getData($input) ***REMOVED***
-    global $wpdb;
+  protected function getDbData($input) ***REMOVED***
+	  global $wpdb;
 
-    if(isset($input)) ***REMOVED***
-      $cache = wp_cache_get($input, 'idosell_prices');
-	    if($cache) ***REMOVED***
-		    return $cache;
-	    ***REMOVED*** else ***REMOVED***
-		    try ***REMOVED***
-			    $sql = "SELECT `price` FROM " . $wpdb->prefix.$this->table_name . " WHERE `id` LIKE %s OR `product_sizecode` LIKE %s OR `sku` LIKE %s OR `code_producer` LIKE %s";
-			    $sql = $wpdb->prepare($sql, $input, $input, $input, $input);
-          $result = $wpdb->get_results($sql)[0]->price;
-          wp_cache_set($input, $result, 'idosell_prices', 86400);
-			    return $result;
-		    ***REMOVED*** catch(Exception $exception) ***REMOVED***
-			    throw $exception;
-		    ***REMOVED***
-	    ***REMOVED***
+	  $cache = wp_cache_get($input, 'idosell_prices');
+	  if($cache) ***REMOVED***
+		  return $cache;
+	  ***REMOVED*** else ***REMOVED***
+		  try ***REMOVED***
+			  $sql = "SELECT `price` FROM " . $wpdb->prefix.$this->table_name . " WHERE `id` LIKE %s OR `product_sizecode` LIKE %s OR `sku` LIKE %s OR `code_producer` LIKE %s";
+			  $sql = $wpdb->prepare($sql, $input, $input, $input, $input);
+			  $result = $wpdb->get_results($sql)[0]->price;
+			  wp_cache_set($input, $result, 'idosell_prices', 86400);
+			  return $result;
+		  ***REMOVED*** catch(Exception $exception) ***REMOVED***
+			  throw $exception;
+		  ***REMOVED***
+	  ***REMOVED***
+  ***REMOVED***
+
+	protected function getData($input) ***REMOVED***
+    if(isset($input) && $input !== "") ***REMOVED***
+      return $this->getDbData($input);
     ***REMOVED*** else ***REMOVED***
-      return null;
+      $acf_field = get_field('product_in');
+      if(isset($acf_field) && $acf_field !== "") ***REMOVED***
+	      return $this->getDbData($acf_field);
+      ***REMOVED*** else ***REMOVED***
+	      return null;
+      ***REMOVED***
     ***REMOVED***
 ***REMOVED***
 
