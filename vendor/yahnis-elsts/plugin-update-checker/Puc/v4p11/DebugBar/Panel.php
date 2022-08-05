@@ -1,40 +1,40 @@
-***REMOVED***
+<?php
 
 if ( !class_exists('Puc_v4p11_DebugBar_Panel', false) && class_exists('Debug_Bar_Panel', false) ):
 
-	class Puc_v4p11_DebugBar_Panel extends Debug_Bar_Panel ***REMOVED***
+	class Puc_v4p11_DebugBar_Panel extends Debug_Bar_Panel {
 		/** @var Puc_v4p11_UpdateChecker */
 		protected $updateChecker;
 
 		private $responseBox = '<div class="puc-ajax-response" style="display: none;"></div>';
 
-		public function __construct($updateChecker) ***REMOVED***
+		public function __construct($updateChecker) {
 			$this->updateChecker = $updateChecker;
 			$title = sprintf(
 				'<span class="puc-debug-menu-link-%s">PUC (%s)</span>',
 				esc_attr($this->updateChecker->getUniqueName('uid')),
 				$this->updateChecker->slug
-***REMOVED***
+			);
 			parent::__construct($title);
-***REMOVED***
+		}
 
-		public function render() ***REMOVED***
+		public function render() {
 			printf(
 				'<div class="puc-debug-bar-panel-v4" id="%1$s" data-slug="%2$s" data-uid="%3$s" data-nonce="%4$s">',
 				esc_attr($this->updateChecker->getUniqueName('debug-bar-panel')),
 				esc_attr($this->updateChecker->slug),
 				esc_attr($this->updateChecker->getUniqueName('uid')),
 				esc_attr(wp_create_nonce('puc-ajax'))
-***REMOVED***
+			);
 
 			$this->displayConfiguration();
 			$this->displayStatus();
 			$this->displayCurrentUpdate();
 
 			echo '</div>';
-***REMOVED***
+		}
 
-		private function displayConfiguration() ***REMOVED***
+		private function displayConfiguration() {
 			echo '<h3>Configuration</h3>';
 			echo '<table class="puc-debug-data">';
 			$this->displayConfigHeader();
@@ -45,14 +45,14 @@ if ( !class_exists('Puc_v4p11_DebugBar_Panel', false) && class_exists('Debug_Bar
 			$this->row('Metadata URL', htmlentities($this->updateChecker->metadataUrl) . ' ' . $requestInfoButton . $this->responseBox);
 
 			$scheduler = $this->updateChecker->scheduler;
-			if ( $scheduler->checkPeriod > 0 ) ***REMOVED***
+			if ( $scheduler->checkPeriod > 0 ) {
 				$this->row('Automatic checks', 'Every ' . $scheduler->checkPeriod . ' hours');
-	***REMOVED*** else ***REMOVED***
+			} else {
 				$this->row('Automatic checks', 'Disabled');
-	***REMOVED***
+			}
 
-			if ( isset($scheduler->throttleRedundantChecks) ) ***REMOVED***
-				if ( $scheduler->throttleRedundantChecks && ($scheduler->checkPeriod > 0) ) ***REMOVED***
+			if ( isset($scheduler->throttleRedundantChecks) ) {
+				if ( $scheduler->throttleRedundantChecks && ($scheduler->checkPeriod > 0) ) {
 					$this->row(
 						'Throttling',
 						sprintf(
@@ -60,106 +60,106 @@ if ( !class_exists('Puc_v4p11_DebugBar_Panel', false) && class_exists('Debug_Bar
 							$scheduler->throttledCheckPeriod,
 							$scheduler->checkPeriod
 						)
-		***REMOVED***
-		***REMOVED*** else ***REMOVED***
+					);
+				} else {
 					$this->row('Throttling', 'Disabled');
-		***REMOVED***
-	***REMOVED***
+				}
+			}
 
 			$this->updateChecker->onDisplayConfiguration($this);
 
 			echo '</table>';
-***REMOVED***
+		}
 
-		protected function displayConfigHeader() ***REMOVED***
+		protected function displayConfigHeader() {
 			//Do nothing. This should be implemented in subclasses.
-***REMOVED***
+		}
 
-		protected function getMetadataButton() ***REMOVED***
+		protected function getMetadataButton() {
 			return '';
-***REMOVED***
+		}
 
-		private function displayStatus() ***REMOVED***
+		private function displayStatus() {
 			echo '<h3>Status</h3>';
 			echo '<table class="puc-debug-data">';
 			$state = $this->updateChecker->getUpdateState();
 			$checkNowButton = '';
-			if ( function_exists('get_submit_button')  ) ***REMOVED***
+			if ( function_exists('get_submit_button')  ) {
 				$checkNowButton = get_submit_button(
 					'Check Now',
 					'secondary',
 					'puc-check-now-button',
 					false,
 					array('id' => $this->updateChecker->getUniqueName('check-now-button'))
-	***REMOVED***
-	***REMOVED***
+				);
+			}
 
-			if ( $state->getLastCheck() > 0 ) ***REMOVED***
+			if ( $state->getLastCheck() > 0 ) {
 				$this->row('Last check', $this->formatTimeWithDelta($state->getLastCheck()) . ' ' . $checkNowButton . $this->responseBox);
-	***REMOVED*** else ***REMOVED***
+			} else {
 				$this->row('Last check', 'Never');
-	***REMOVED***
+			}
 
 			$nextCheck = wp_next_scheduled($this->updateChecker->scheduler->getCronHookName());
 			$this->row('Next automatic check', $this->formatTimeWithDelta($nextCheck));
 
-			if ( $state->getCheckedVersion() !== '' ) ***REMOVED***
+			if ( $state->getCheckedVersion() !== '' ) {
 				$this->row('Checked version', htmlentities($state->getCheckedVersion()));
 				$this->row('Cached update', $state->getUpdate());
-	***REMOVED***
+			}
 			$this->row('Update checker class', htmlentities(get_class($this->updateChecker)));
 			echo '</table>';
-***REMOVED***
+		}
 
-		private function displayCurrentUpdate() ***REMOVED***
+		private function displayCurrentUpdate() {
 			$update = $this->updateChecker->getUpdate();
-			if ( $update !== null ) ***REMOVED***
+			if ( $update !== null ) {
 				echo '<h3>An Update Is Available</h3>';
 				echo '<table class="puc-debug-data">';
 				$fields = $this->getUpdateFields();
-				foreach($fields as $field) ***REMOVED***
-					if ( property_exists($update, $field) ) ***REMOVED***
+				foreach($fields as $field) {
+					if ( property_exists($update, $field) ) {
 						$this->row(ucwords(str_replace('_', ' ', $field)), htmlentities($update->$field));
-			***REMOVED***
-		***REMOVED***
+					}
+				}
 				echo '</table>';
-	***REMOVED*** else ***REMOVED***
+			} else {
 				echo '<h3>No updates currently available</h3>';
-	***REMOVED***
-***REMOVED***
+			}
+		}
 
-		protected function getUpdateFields() ***REMOVED***
+		protected function getUpdateFields() {
 			return array('version', 'download_url', 'slug',);
-***REMOVED***
+		}
 
-		private function formatTimeWithDelta($unixTime) ***REMOVED***
-			if ( empty($unixTime) ) ***REMOVED***
+		private function formatTimeWithDelta($unixTime) {
+			if ( empty($unixTime) ) {
 				return 'Never';
-	***REMOVED***
+			}
 
 			$delta = time() - $unixTime;
 			$result = human_time_diff(time(), $unixTime);
-			if ( $delta < 0 ) ***REMOVED***
+			if ( $delta < 0 ) {
 				$result = 'after ' . $result;
-	***REMOVED*** else ***REMOVED***
+			} else {
 				$result = $result . ' ago';
-	***REMOVED***
+			}
 			$result .= ' (' . $this->formatTimestamp($unixTime) . ')';
 			return $result;
-***REMOVED***
+		}
 
-		private function formatTimestamp($unixTime) ***REMOVED***
+		private function formatTimestamp($unixTime) {
 			return gmdate('Y-m-d H:i:s', $unixTime + (get_option('gmt_offset') * 3600));
-***REMOVED***
+		}
 
-		public function row($name, $value) ***REMOVED***
-			if ( is_object($value) || is_array($value) ) ***REMOVED***
+		public function row($name, $value) {
+			if ( is_object($value) || is_array($value) ) {
 				$value = '<pre>' . htmlentities(print_r($value, true)) . '</pre>';
-	***REMOVED*** else if ($value === null) ***REMOVED***
+			} else if ($value === null) {
 				$value = '<code>null</code>';
-	***REMOVED***
+			}
 			printf('<tr><th scope="row">%1$s</th> <td>%2$s</td></tr>', $name, $value);
-***REMOVED***
-***REMOVED***
+		}
+	}
 
 endif;

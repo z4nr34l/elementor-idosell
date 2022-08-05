@@ -1,4 +1,4 @@
-***REMOVED***
+<?php
 /**
  * Plugin Update Checker Library 4.11
  * http://w-shadow.com/

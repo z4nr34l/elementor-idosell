@@ -1,7 +1,7 @@
-***REMOVED***
+<?php
 if ( !class_exists('Puc_v4p11_Theme_Package', false) ):
 
-	class Puc_v4p11_Theme_Package extends Puc_v4p11_InstalledPackage ***REMOVED***
+	class Puc_v4p11_Theme_Package extends Puc_v4p11_InstalledPackage {
 		/**
 		 * @var string Theme directory name.
 		 */
@@ -12,23 +12,23 @@ if ( !class_exists('Puc_v4p11_Theme_Package', false) ):
 		 */
 		protected $theme;
 
-		public function __construct($stylesheet, $updateChecker) ***REMOVED***
+		public function __construct($stylesheet, $updateChecker) {
 			$this->stylesheet = $stylesheet;
 			$this->theme = wp_get_theme($this->stylesheet);
 
 			parent::__construct($updateChecker);
-***REMOVED***
+		}
 
-		public function getInstalledVersion() ***REMOVED***
+		public function getInstalledVersion() {
 			return $this->theme->get('Version');
-***REMOVED***
+		}
 
-		public function getAbsoluteDirectoryPath() ***REMOVED***
-			if ( method_exists($this->theme, 'get_stylesheet_directory') ) ***REMOVED***
+		public function getAbsoluteDirectoryPath() {
+			if ( method_exists($this->theme, 'get_stylesheet_directory') ) {
 				return $this->theme->get_stylesheet_directory(); //Available since WP 3.4.
-	***REMOVED***
+			}
 			return get_theme_root($this->stylesheet) . '/' . $this->stylesheet;
-***REMOVED***
+		}
 
 		/**
 		 * Get the value of a specific plugin or theme header.
@@ -37,15 +37,15 @@ if ( !class_exists('Puc_v4p11_Theme_Package', false) ):
 		 * @param string $defaultValue
 		 * @return string Either the value of the header, or $defaultValue if the header doesn't exist or is empty.
 		 */
-		public function getHeaderValue($headerName, $defaultValue = '') ***REMOVED***
+		public function getHeaderValue($headerName, $defaultValue = '') {
 			$value = $this->theme->get($headerName);
-			if ( ($headerName === false) || ($headerName === '') ) ***REMOVED***
+			if ( ($headerName === false) || ($headerName === '') ) {
 				return $defaultValue;
-	***REMOVED***
+			}
 			return $value;
-***REMOVED***
+		}
 
-		protected function getHeaderNames() ***REMOVED***
+		protected function getHeaderNames() {
 			return array(
 				'Name'        => 'Theme Name',
 				'ThemeURI'    => 'Theme URI',
@@ -58,8 +58,8 @@ if ( !class_exists('Puc_v4p11_Theme_Package', false) ):
 				'Tags'        => 'Tags',
 				'TextDomain'  => 'Text Domain',
 				'DomainPath'  => 'Domain Path',
-***REMOVED***
-***REMOVED***
-***REMOVED***
+			);
+		}
+	}
 
 endif;

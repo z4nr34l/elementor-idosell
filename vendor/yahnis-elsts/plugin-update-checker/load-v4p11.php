@@ -1,4 +1,4 @@
-***REMOVED***
+<?php
 require dirname(__FILE__) . '/Puc/v4p11/Autoloader.php';
 new Puc_v4p11_Autoloader();
 
@@ -19,10 +19,10 @@ foreach (
 		'GitLabApi'    => 'Puc_v4p11_Vcs_GitLabApi',
 	)
 	as $pucGeneralClass => $pucVersionedClass
-) ***REMOVED***
+) {
 	Puc_v4_Factory::addVersion($pucGeneralClass, $pucVersionedClass, '4.11');
 	//Also add it to the minor-version factory in case the major-version factory
 	//was already defined by another, older version of the update checker.
 	Puc_v4p11_Factory::addVersion($pucGeneralClass, $pucVersionedClass, '4.11');
-***REMOVED***
+}
 

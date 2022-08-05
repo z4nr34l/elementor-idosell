@@ -1,25 +1,25 @@
-***REMOVED***
+{
   "name": "z4nr34l/elementor-idosell",
   "minimum-stability": "stable",
   "prefer-stable": true,
   "type": "wordpress-plugin",
-  "autoload": ***REMOVED***
-    "psr-4": ***REMOVED***
+  "autoload": {
+    "psr-4": {
       "ElementorIdosell\\": "src/"
-    ***REMOVED***
-  ***REMOVED***,
-  "require": ***REMOVED***
+    }
+  },
+  "require": {
     "php": ">=7.4",
     "yahnis-elsts/plugin-update-checker": "^4.11",
     "ext-json": "*",
     "ext-curl": "*",
     "ext-simplexml": "*"
-  ***REMOVED***,
+  },
   "license": "MIT",
   "authors": [
-    ***REMOVED***
+    {
       "name": "Mateusz \"Z4RN34L\" Janota",
       "email": "software@zanreal.pl"
-    ***REMOVED***
+    }
   ]
-***REMOVED***
+}

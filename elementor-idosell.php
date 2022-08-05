@@ -1,16 +1,16 @@
-***REMOVED***
+<?php
 
 /*
 Plugin Name: Elementor Idosell
 Description: Elementor integration for Idosell
-Version: 2022.0.12
+Version: 2022.0.13
 Author: Mateusz "Z4NR34L" Janota
 Author URI: https://www.zanreal.pl
 */
 
-if ( ! defined( 'ABSPATH' ) ) ***REMOVED***
+if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
-***REMOVED***
+}
 
 require __DIR__ . '/vendor/autoload.php';
 

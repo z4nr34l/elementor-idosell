@@ -1,4 +1,4 @@
-***REMOVED***
+<?php
 if ( !class_exists('Puc_v4p11_Update', false) ):
 
 	/**
@@ -7,7 +7,7 @@ if ( !class_exists('Puc_v4p11_Update', false) ):
 	 * @author Janis Elsts
 	 * @access public
 	 */
-	abstract class Puc_v4p11_Update extends Puc_v4p11_Metadata ***REMOVED***
+	abstract class Puc_v4p11_Update extends Puc_v4p11_Metadata {
 		public $slug;
 		public $version;
 		public $download_url;
@@ -16,11 +16,11 @@ if ( !class_exists('Puc_v4p11_Update', false) ):
 		/**
 		 * @return string[]
 		 */
-		protected function getFieldNames() ***REMOVED***
+		protected function getFieldNames() {
 			return array('slug', 'version', 'download_url', 'translations');
-***REMOVED***
+		}
 
-		public function toWpFormat() ***REMOVED***
+		public function toWpFormat() {
 			$update = new stdClass();
 
 			$update->slug = $this->slug;
@@ -28,7 +28,7 @@ if ( !class_exists('Puc_v4p11_Update', false) ):
 			$update->package = $this->download_url;
 
 			return $update;
-***REMOVED***
-***REMOVED***
+		}
+	}
 
 endif;

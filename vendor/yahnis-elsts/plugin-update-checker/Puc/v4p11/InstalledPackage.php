@@ -1,4 +1,4 @@
-***REMOVED***
+<?php
 if ( !class_exists('Puc_v4p11_InstalledPackage', false) ):
 
 	/**
@@ -7,15 +7,15 @@ if ( !class_exists('Puc_v4p11_InstalledPackage', false) ):
 	 * Not to be confused with the "package" field in WP update API responses that contains
 	 * the download URL of a the new version.
 	 */
-	abstract class Puc_v4p11_InstalledPackage ***REMOVED***
+	abstract class Puc_v4p11_InstalledPackage {
 		/**
 		 * @var Puc_v4p11_UpdateChecker
 		 */
 		protected $updateChecker;
 
-		public function __construct($updateChecker) ***REMOVED***
+		public function __construct($updateChecker) {
 			$this->updateChecker = $updateChecker;
-***REMOVED***
+		}
 
 		/**
 		 * Get the currently installed version of the plugin or theme.
@@ -37,13 +37,13 @@ if ( !class_exists('Puc_v4p11_InstalledPackage', false) ):
 		 * @param string $relativeFileName File name relative to the package directory.
 		 * @return bool
 		 */
-		public function fileExists($relativeFileName) ***REMOVED***
+		public function fileExists($relativeFileName) {
 			return is_file(
 				$this->getAbsoluteDirectoryPath()
 				. DIRECTORY_SEPARATOR
 				. ltrim($relativeFileName, '/\\')
-***REMOVED***
-***REMOVED***
+			);
+		}
 
 		/* -------------------------------------------------------------------
 		 * File header parsing
@@ -59,7 +59,7 @@ if ( !class_exists('Puc_v4p11_InstalledPackage', false) ):
 		 * @param string|null $content File contents.
 		 * @return string[]
 		 */
-		public function getFileHeader($content) ***REMOVED***
+		public function getFileHeader($content) {
 			$content = (string)$content;
 
 			//WordPress only looks at the first 8 KiB of the file, so we do the same.
@@ -69,22 +69,22 @@ if ( !class_exists('Puc_v4p11_InstalledPackage', false) ):
 
 			$headers = $this->getHeaderNames();
 			$results = array();
-			foreach ($headers as $field => $name) ***REMOVED***
+			foreach ($headers as $field => $name) {
 				$success = preg_match('/^[ \t\/*#@]*' . preg_quote($name, '/') . ':(.*)$/mi', $content, $matches);
 
-				if ( ($success === 1) && $matches[1] ) ***REMOVED***
+				if ( ($success === 1) && $matches[1] ) {
 					$value = $matches[1];
-					if ( function_exists('_cleanup_header_comment') ) ***REMOVED***
+					if ( function_exists('_cleanup_header_comment') ) {
 						$value = _cleanup_header_comment($value);
-			***REMOVED***
+					}
 					$results[$field] = $value;
-		***REMOVED*** else ***REMOVED***
+				} else {
 					$results[$field] = '';
-		***REMOVED***
-	***REMOVED***
+				}
+			}
 
 			return $results;
-***REMOVED***
+		}
 
 		/**
 		 * @return array Format: ['HeaderKey' => 'Header Name']
@@ -99,5 +99,5 @@ if ( !class_exists('Puc_v4p11_InstalledPackage', false) ):
 		 */
 		abstract public function getHeaderValue($headerName);
 
-***REMOVED***
+	}
 endif;

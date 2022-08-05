@@ -1,43 +1,43 @@
-***REMOVED***
+{
     "packages": [
-        ***REMOVED***
+        {
             "name": "yahnis-elsts/plugin-update-checker",
             "version": "v4.11",
             "version_normalized": "4.11.0.0",
-            "source": ***REMOVED***
+            "source": {
                 "type": "git",
                 "url": "https://github.com/YahnisElsts/plugin-update-checker.git",
                 "reference": "3155f2d3f1ca5e7ed3f25b256f020e370515af43"
-***REMOVED***,
-            "dist": ***REMOVED***
+            },
+            "dist": {
                 "type": "zip",
                 "url": "https://api.github.com/repos/YahnisElsts/plugin-update-checker/zipball/3155f2d3f1ca5e7ed3f25b256f020e370515af43",
                 "reference": "3155f2d3f1ca5e7ed3f25b256f020e370515af43",
                 "shasum": ""
-***REMOVED***,
-            "require": ***REMOVED***
+            },
+            "require": {
                 "ext-json": "*",
                 "php": ">=5.2.0"
-***REMOVED***,
+            },
             "time": "2021-03-15T16:07:52+00:00",
             "type": "library",
             "installation-source": "dist",
-            "autoload": ***REMOVED***
+            "autoload": {
                 "files": [
                     "load-v4p11.php"
                 ]
-***REMOVED***,
+            },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
             "authors": [
-                ***REMOVED***
+                {
                     "name": "Yahnis Elsts",
                     "email": "whiteshadow@w-shadow.com",
                     "homepage": "http://w-shadow.com/",
                     "role": "Developer"
-***REMOVED***
+                }
             ],
             "description": "A custom update checker for WordPress plugins and themes. Useful if you can't host your plugin in the official WP repository but still want it to support automatic updates.",
             "homepage": "https://github.com/YahnisElsts/plugin-update-checker/",
@@ -47,13 +47,13 @@
                 "theme updates",
                 "wordpress"
             ],
-            "support": ***REMOVED***
+            "support": {
                 "issues": "https://github.com/YahnisElsts/plugin-update-checker/issues",
                 "source": "https://github.com/YahnisElsts/plugin-update-checker/tree/v4.11"
-***REMOVED***,
+            },
             "install-path": "../yahnis-elsts/plugin-update-checker"
-        ***REMOVED***
+        }
     ],
     "dev": true,
     "dev-package-names": []
-***REMOVED***
+}

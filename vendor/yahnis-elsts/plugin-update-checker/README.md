@@ -37,25 +37,25 @@ Getting Started
 	- Plugin example:
 	
 		```json
-		***REMOVED***
+		{
 			"name" : "Plugin Name",
 			"version" : "2.0",
 			"download_url" : "http://example.com/plugin-name-2.0.zip",
-			"sections" : ***REMOVED***
+			"sections" : {
 				"description" : "Plugin description here. You can use HTML."
-	***REMOVED***
-***REMOVED***
+			}
+		}
 		```
 		
         This is a minimal example that leaves out optional fields. See [this table](https://docs.google.com/spreadsheets/d/1eOBbW7Go2qEQXReOOCdidMTf_tDYRq4JfegcO1CBPIs/edit?usp=sharing) for a full list of supported fields and their descriptions.
 	- Theme example:
 	
 		```json
-		***REMOVED***
+		{
 			"version": "2.0",
 			"details_url": "http://example.com/version-2.0-details.html",
 			"download_url": "http://example.com/example-theme-2.0.zip"
-***REMOVED***
+		}
 		```
 		
 		This is actually a complete example that shows all theme-related fields. `version` and `download_url` should be self-explanatory. The `details_url` key specifies the page that the user will see if they click the "View version 1.2.3 details" link in an update notification.  

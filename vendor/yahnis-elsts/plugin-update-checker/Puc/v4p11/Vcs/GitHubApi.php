@@ -1,8 +1,8 @@
-***REMOVED***
+<?php
 
 if ( !class_exists('Puc_v4p11_Vcs_GitHubApi', false) ):
 
-	class Puc_v4p11_Vcs_GitHubApi extends Puc_v4p11_Vcs_Api ***REMOVED***
+	class Puc_v4p11_Vcs_GitHubApi extends Puc_v4p11_Vcs_Api {
 		/**
 		 * @var string GitHub username.
 		 */
@@ -42,28 +42,28 @@ if ( !class_exists('Puc_v4p11_Vcs_GitHubApi', false) ):
 		 */
 		private $downloadFilterAdded = false;
 
-		public function __construct($repositoryUrl, $accessToken = null) ***REMOVED***
+		public function __construct($repositoryUrl, $accessToken = null) {
 			$path = parse_url($repositoryUrl, PHP_URL_PATH);
-			if ( preg_match('@^/?(?P<username>[^/]+?)/(?P<repository>[^/#?&]+?)/?$@', $path, $matches) ) ***REMOVED***
+			if ( preg_match('@^/?(?P<username>[^/]+?)/(?P<repository>[^/#?&]+?)/?$@', $path, $matches) ) {
 				$this->userName = $matches['username'];
 				$this->repositoryName = $matches['repository'];
-	***REMOVED*** else ***REMOVED***
+			} else {
 				throw new InvalidArgumentException('Invalid GitHub repository URL: "' . $repositoryUrl . '"');
-	***REMOVED***
+			}
 
 			parent::__construct($repositoryUrl, $accessToken);
-***REMOVED***
+		}
 
 		/**
 		 * Get the latest release from GitHub.
 		 *
 		 * @return Puc_v4p11_Vcs_Reference|null
 		 */
-		public function getLatestRelease() ***REMOVED***
+		public function getLatestRelease() {
 			$release = $this->api('/repos/:user/:repo/releases/latest');
-			if ( is_wp_error($release) || !is_object($release) || !isset($release->tag_name) ) ***REMOVED***
+			if ( is_wp_error($release) || !is_object($release) || !isset($release->tag_name) ) {
 				return null;
-	***REMOVED***
+			}
 
 			$reference = new Puc_v4p11_Vcs_Reference(array(
 				'name'        => $release->tag_name,
@@ -73,55 +73,55 @@ if ( !class_exists('Puc_v4p11_Vcs_GitHubApi', false) ):
 				'apiResponse' => $release,
 			));
 
-			if ( isset($release->assets[0]) ) ***REMOVED***
+			if ( isset($release->assets[0]) ) {
 				$reference->downloadCount = $release->assets[0]->download_count;
-	***REMOVED***
+			}
 
-			if ( $this->releaseAssetsEnabled && isset($release->assets, $release->assets[0]) ) ***REMOVED***
+			if ( $this->releaseAssetsEnabled && isset($release->assets, $release->assets[0]) ) {
 				//Use the first release asset that matches the specified regular expression.
 				$matchingAssets = array_filter($release->assets, array($this, 'matchesAssetFilter'));
-				if ( !empty($matchingAssets) ) ***REMOVED***
-					if ( $this->isAuthenticationEnabled() ) ***REMOVED***
+				if ( !empty($matchingAssets) ) {
+					if ( $this->isAuthenticationEnabled() ) {
 						/**
 						 * Keep in mind that we'll need to add an "Accept" header to download this asset.
 						 *
 						 * @see setUpdateDownloadHeaders()
 						 */
 						$reference->downloadUrl = $matchingAssets[0]->url;
-			***REMOVED*** else ***REMOVED***
+					} else {
 						//It seems that browser_download_url only works for public repositories.
 						//Using an access_token doesn't help. Maybe OAuth would work?
 						$reference->downloadUrl = $matchingAssets[0]->browser_download_url;
-			***REMOVED***
+					}
 
 					$reference->downloadCount = $matchingAssets[0]->download_count;
-		***REMOVED***
-	***REMOVED***
+				}
+			}
 
-			if ( !empty($release->body) ) ***REMOVED***
+			if ( !empty($release->body) ) {
 				/** @noinspection PhpUndefinedClassInspection */
 				$reference->changelog = Parsedown::instance()->text($release->body);
-	***REMOVED***
+			}
 
 			return $reference;
-***REMOVED***
+		}
 
 		/**
 		 * Get the tag that looks like the highest version number.
 		 *
 		 * @return Puc_v4p11_Vcs_Reference|null
 		 */
-		public function getLatestTag() ***REMOVED***
+		public function getLatestTag() {
 			$tags = $this->api('/repos/:user/:repo/tags');
 
-			if ( is_wp_error($tags) || !is_array($tags) ) ***REMOVED***
+			if ( is_wp_error($tags) || !is_array($tags) ) {
 				return null;
-	***REMOVED***
+			}
 
 			$versionTags = $this->sortTagsByVersion($tags);
-			if ( empty($versionTags) ) ***REMOVED***
+			if ( empty($versionTags) ) {
 				return null;
-	***REMOVED***
+			}
 
 			$tag = $versionTags[0];
 			return new Puc_v4p11_Vcs_Reference(array(
@@ -130,7 +130,7 @@ if ( !class_exists('Puc_v4p11_Vcs_GitHubApi', false) ):
 				'downloadUrl' => $tag->zipball_url,
 				'apiResponse' => $tag,
 			));
-***REMOVED***
+		}
 
 		/**
 		 * Get a branch by name.
@@ -138,11 +138,11 @@ if ( !class_exists('Puc_v4p11_Vcs_GitHubApi', false) ):
 		 * @param string $branchName
 		 * @return null|Puc_v4p11_Vcs_Reference
 		 */
-		public function getBranch($branchName) ***REMOVED***
+		public function getBranch($branchName) {
 			$branch = $this->api('/repos/:user/:repo/branches/' . $branchName);
-			if ( is_wp_error($branch) || empty($branch) ) ***REMOVED***
+			if ( is_wp_error($branch) || empty($branch) ) {
 				return null;
-	***REMOVED***
+			}
 
 			$reference = new Puc_v4p11_Vcs_Reference(array(
 				'name'        => $branch->name,
@@ -150,12 +150,12 @@ if ( !class_exists('Puc_v4p11_Vcs_GitHubApi', false) ):
 				'apiResponse' => $branch,
 			));
 
-			if ( isset($branch->commit, $branch->commit->commit, $branch->commit->commit->author->date) ) ***REMOVED***
+			if ( isset($branch->commit, $branch->commit->commit, $branch->commit->commit->author->date) ) {
 				$reference->updated = $branch->commit->commit->author->date;
-	***REMOVED***
+			}
 
 			return $reference;
-***REMOVED***
+		}
 
 		/**
 		 * Get the latest commit that changed the specified file.
@@ -164,19 +164,19 @@ if ( !class_exists('Puc_v4p11_Vcs_GitHubApi', false) ):
 		 * @param string $ref Reference name (e.g. branch or tag).
 		 * @return StdClass|null
 		 */
-		public function getLatestCommit($filename, $ref = 'master') ***REMOVED***
+		public function getLatestCommit($filename, $ref = 'master') {
 			$commits = $this->api(
 				'/repos/:user/:repo/commits',
 				array(
 					'path' => $filename,
 					'sha'  => $ref,
 				)
-***REMOVED***
-			if ( !is_wp_error($commits) && isset($commits[0]) ) ***REMOVED***
+			);
+			if ( !is_wp_error($commits) && isset($commits[0]) ) {
 				return $commits[0];
-	***REMOVED***
+			}
 			return null;
-***REMOVED***
+		}
 
 		/**
 		 * Get the timestamp of the latest commit that changed the specified branch or tag.
@@ -184,13 +184,13 @@ if ( !class_exists('Puc_v4p11_Vcs_GitHubApi', false) ):
 		 * @param string $ref Reference name (e.g. branch or tag).
 		 * @return string|null
 		 */
-		public function getLatestCommitTime($ref) ***REMOVED***
+		public function getLatestCommitTime($ref) {
 			$commits = $this->api('/repos/:user/:repo/commits', array('sha' => $ref));
-			if ( !is_wp_error($commits) && isset($commits[0]) ) ***REMOVED***
+			if ( !is_wp_error($commits) && isset($commits[0]) ) {
 				return $commits[0]->commit->author->date;
-	***REMOVED***
+			}
 			return null;
-***REMOVED***
+		}
 
 		/**
 		 * Perform a GitHub API request.
@@ -199,39 +199,39 @@ if ( !class_exists('Puc_v4p11_Vcs_GitHubApi', false) ):
 		 * @param array $queryParams
 		 * @return mixed|WP_Error
 		 */
-		protected function api($url, $queryParams = array()) ***REMOVED***
+		protected function api($url, $queryParams = array()) {
 			$baseUrl = $url;
 			$url = $this->buildApiUrl($url, $queryParams);
 
 			$options = array('timeout' => 10);
-			if ( $this->isAuthenticationEnabled() ) ***REMOVED***
+			if ( $this->isAuthenticationEnabled() ) {
 				$options['headers'] = array('Authorization' => $this->getAuthorizationHeader());
-	***REMOVED***
+			}
 
-			if ( !empty($this->httpFilterName) ) ***REMOVED***
+			if ( !empty($this->httpFilterName) ) {
 				$options = apply_filters($this->httpFilterName, $options);
-	***REMOVED***
+			}
 			$response = wp_remote_get($url, $options);
-			if ( is_wp_error($response) ) ***REMOVED***
+			if ( is_wp_error($response) ) {
 				do_action('puc_api_error', $response, null, $url, $this->slug);
 				return $response;
-	***REMOVED***
+			}
 
 			$code = wp_remote_retrieve_response_code($response);
 			$body = wp_remote_retrieve_body($response);
-			if ( $code === 200 ) ***REMOVED***
+			if ( $code === 200 ) {
 				$document = json_decode($body);
 				return $document;
-	***REMOVED***
+			}
 
 			$error = new WP_Error(
 				'puc-github-http-error',
 				sprintf('GitHub API error. Base URL: "%s",  HTTP status code: %d.', $baseUrl, $code)
-***REMOVED***
+			);
 			do_action('puc_api_error', $error, $response, $url, $this->slug);
 
 			return $error;
-***REMOVED***
+		}
 
 		/**
 		 * Build a fully qualified URL for an API request.
@@ -240,22 +240,22 @@ if ( !class_exists('Puc_v4p11_Vcs_GitHubApi', false) ):
 		 * @param array $queryParams
 		 * @return string
 		 */
-		protected function buildApiUrl($url, $queryParams) ***REMOVED***
+		protected function buildApiUrl($url, $queryParams) {
 			$variables = array(
 				'user' => $this->userName,
 				'repo' => $this->repositoryName,
-***REMOVED***
-			foreach ($variables as $name => $value) ***REMOVED***
+			);
+			foreach ($variables as $name => $value) {
 				$url = str_replace('/:' . $name, '/' . urlencode($value), $url);
-	***REMOVED***
+			}
 			$url = 'https://api.github.com' . $url;
 
-			if ( !empty($queryParams) ) ***REMOVED***
+			if ( !empty($queryParams) ) {
 				$url = add_query_arg($queryParams, $url);
-	***REMOVED***
+			}
 
 			return $url;
-***REMOVED***
+		}
 
 		/**
 		 * Get the contents of a file from a specific branch or tag.
@@ -264,15 +264,15 @@ if ( !class_exists('Puc_v4p11_Vcs_GitHubApi', false) ):
 		 * @param string $ref
 		 * @return null|string Either the contents of the file, or null if the file doesn't exist or there's an error.
 		 */
-		public function getRemoteFile($path, $ref = 'master') ***REMOVED***
+		public function getRemoteFile($path, $ref = 'master') {
 			$apiUrl = '/repos/:user/:repo/contents/' . $path;
 			$response = $this->api($apiUrl, array('ref' => $ref));
 
-			if ( is_wp_error($response) || !isset($response->content) || ($response->encoding !== 'base64') ) ***REMOVED***
+			if ( is_wp_error($response) || !isset($response->content) || ($response->encoding !== 'base64') ) {
 				return null;
-	***REMOVED***
+			}
 			return base64_decode($response->content);
-***REMOVED***
+		}
 
 		/**
 		 * Generate a URL to download a ZIP archive of the specified branch/tag/etc.
@@ -280,15 +280,15 @@ if ( !class_exists('Puc_v4p11_Vcs_GitHubApi', false) ):
 		 * @param string $ref
 		 * @return string
 		 */
-		public function buildArchiveDownloadUrl($ref = 'master') ***REMOVED***
+		public function buildArchiveDownloadUrl($ref = 'master') {
 			$url = sprintf(
 				'https://api.github.com/repos/%1$s/%2$s/zipball/%3$s',
 				urlencode($this->userName),
 				urlencode($this->repositoryName),
 				urlencode($ref)
-***REMOVED***
+			);
 			return $url;
-***REMOVED***
+		}
 
 		/**
 		 * Get a specific tag.
@@ -296,19 +296,19 @@ if ( !class_exists('Puc_v4p11_Vcs_GitHubApi', false) ):
 		 * @param string $tagName
 		 * @return void
 		 */
-		public function getTag($tagName) ***REMOVED***
+		public function getTag($tagName) {
 			//The current GitHub update checker doesn't use getTag, so I didn't bother to implement it.
 			throw new LogicException('The ' . __METHOD__ . ' method is not implemented and should not be used.');
-***REMOVED***
+		}
 
-		public function setAuthentication($credentials) ***REMOVED***
+		public function setAuthentication($credentials) {
 			parent::setAuthentication($credentials);
 			$this->accessToken = is_string($credentials) ? $credentials : null;
 
 			//Optimization: Instead of filtering all HTTP requests, let's do it only when
 			//WordPress is about to download an update.
 			add_filter('upgrader_pre_download', array($this, 'addHttpRequestFilter'), 10, 1); //WP 3.7+
-***REMOVED***
+		}
 
 		/**
 		 * Figure out which reference (i.e tag or branch) contains the latest version.
@@ -316,24 +316,24 @@ if ( !class_exists('Puc_v4p11_Vcs_GitHubApi', false) ):
 		 * @param string $configBranch Start looking in this branch.
 		 * @return null|Puc_v4p11_Vcs_Reference
 		 */
-		public function chooseReference($configBranch) ***REMOVED***
+		public function chooseReference($configBranch) {
 			$updateSource = null;
 
-			if ( $configBranch === 'master' ) ***REMOVED***
+			if ( $configBranch === 'master' ) {
 				//Use the latest release.
 				$updateSource = $this->getLatestRelease();
-				if ( $updateSource === null ) ***REMOVED***
+				if ( $updateSource === null ) {
 					//Failing that, use the tag with the highest version number.
 					$updateSource = $this->getLatestTag();
-		***REMOVED***
-	***REMOVED***
+				}
+			}
 			//Alternatively, just use the branch itself.
-			if ( empty($updateSource) ) ***REMOVED***
+			if ( empty($updateSource) ) {
 				$updateSource = $this->getBranch($configBranch);
-	***REMOVED***
+			}
 
 			return $updateSource;
-***REMOVED***
+		}
 
 		/**
 		 * Enable updating via release assets.
@@ -345,15 +345,15 @@ if ( !class_exists('Puc_v4p11_Vcs_GitHubApi', false) ):
 		 *
 		 * @param string|null $fileNameRegex Optional. Use only those assets where the file name matches this regex.
 		 */
-		public function enableReleaseAssets($fileNameRegex = null) ***REMOVED***
+		public function enableReleaseAssets($fileNameRegex = null) {
 			$this->releaseAssetsEnabled = true;
 			$this->assetFilterRegex = $fileNameRegex;
 			$this->assetApiBaseUrl = sprintf(
 				'//api.github.com/repos/%1$s/%2$s/releases/assets/',
 				$this->userName,
 				$this->repositoryName
-***REMOVED***
-***REMOVED***
+			);
+		}
 
 		/**
 		 * Does this asset match the file name regex?
@@ -361,27 +361,27 @@ if ( !class_exists('Puc_v4p11_Vcs_GitHubApi', false) ):
 		 * @param stdClass $releaseAsset
 		 * @return bool
 		 */
-		protected function matchesAssetFilter($releaseAsset) ***REMOVED***
-			if ( $this->assetFilterRegex === null ) ***REMOVED***
+		protected function matchesAssetFilter($releaseAsset) {
+			if ( $this->assetFilterRegex === null ) {
 				//The default is to accept all assets.
 				return true;
-	***REMOVED***
+			}
 			return isset($releaseAsset->name) && preg_match($this->assetFilterRegex, $releaseAsset->name);
-***REMOVED***
+		}
 
 		/**
 		 * @internal
 		 * @param bool $result
 		 * @return bool
 		 */
-		public function addHttpRequestFilter($result) ***REMOVED***
-			if ( !$this->downloadFilterAdded && $this->isAuthenticationEnabled() ) ***REMOVED***
+		public function addHttpRequestFilter($result) {
+			if ( !$this->downloadFilterAdded && $this->isAuthenticationEnabled() ) {
 				add_filter('http_request_args', array($this, 'setUpdateDownloadHeaders'), 10, 2);
 				add_action('requests-requests.before_redirect', array($this, 'removeAuthHeaderFromRedirects'), 10, 4);
 				$this->downloadFilterAdded = true;
-	***REMOVED***
+			}
 			return $result;
-***REMOVED***
+		}
 
 		/**
 		 * Set the HTTP headers that are necessary to download updates from private repositories.
@@ -395,18 +395,18 @@ if ( !class_exists('Puc_v4p11_Vcs_GitHubApi', false) ):
 		 * @param string $url
 		 * @return array
 		 */
-		public function setUpdateDownloadHeaders($requestArgs, $url = '') ***REMOVED***
+		public function setUpdateDownloadHeaders($requestArgs, $url = '') {
 			//Is WordPress trying to download one of our release assets?
-			if ( $this->releaseAssetsEnabled && (strpos($url, $this->assetApiBaseUrl) !== false) ) ***REMOVED***
+			if ( $this->releaseAssetsEnabled && (strpos($url, $this->assetApiBaseUrl) !== false) ) {
 				$requestArgs['headers']['Accept'] = 'application/octet-stream';
-	***REMOVED***
+			}
 			//Use Basic authentication, but only if the download is from our repository.
 			$repoApiBaseUrl = $this->buildApiUrl('/repos/:user/:repo/', array());
-			if ( $this->isAuthenticationEnabled() && (strpos($url, $repoApiBaseUrl)) === 0 ) ***REMOVED***
+			if ( $this->isAuthenticationEnabled() && (strpos($url, $repoApiBaseUrl)) === 0 ) {
 				$requestArgs['headers']['Authorization'] = $this->getAuthorizationHeader();
-	***REMOVED***
+			}
 			return $requestArgs;
-***REMOVED***
+		}
 
 		/**
 		 * When following a redirect, the Requests library will automatically forward
@@ -417,25 +417,25 @@ if ( !class_exists('Puc_v4p11_Vcs_GitHubApi', false) ):
 		 * @param string $location
 		 * @param array $headers
 		 */
-		public function removeAuthHeaderFromRedirects(&$location, &$headers) ***REMOVED***
+		public function removeAuthHeaderFromRedirects(&$location, &$headers) {
 			$repoApiBaseUrl = $this->buildApiUrl('/repos/:user/:repo/', array());
-			if ( strpos($location, $repoApiBaseUrl) === 0 ) ***REMOVED***
+			if ( strpos($location, $repoApiBaseUrl) === 0 ) {
 				return; //This request is going to GitHub, so it's fine.
-	***REMOVED***
+			}
 			//Remove the header.
-			if ( isset($headers['Authorization']) ) ***REMOVED***
+			if ( isset($headers['Authorization']) ) {
 				unset($headers['Authorization']);
-	***REMOVED***
-***REMOVED***
+			}
+		}
 
 		/**
 		 * Generate the value of the "Authorization" header.
 		 *
 		 * @return string
 		 */
-		protected function getAuthorizationHeader() ***REMOVED***
+		protected function getAuthorizationHeader() {
 			return 'Basic ' . base64_encode($this->userName . ':' . $this->accessToken);
-***REMOVED***
-***REMOVED***
+		}
+	}
 
 endif;

@@ -1,4 +1,4 @@
-***REMOVED***
+<?php
 if ( !class_exists('Puc_v4p11_Vcs_Reference', false) ):
 
 	/**
@@ -13,37 +13,37 @@ if ( !class_exists('Puc_v4p11_Vcs_Reference', false) ):
 	 * @property string|null $changelog
 	 * @property int|null $downloadCount
 	 */
-	class Puc_v4p11_Vcs_Reference ***REMOVED***
+	class Puc_v4p11_Vcs_Reference {
 		private $properties = array();
 
-		public function __construct($properties = array()) ***REMOVED***
+		public function __construct($properties = array()) {
 			$this->properties = $properties;
-***REMOVED***
+		}
 
 		/**
 		 * @param string $name
 		 * @return mixed|null
 		 */
-		public function __get($name) ***REMOVED***
+		public function __get($name) {
 			return array_key_exists($name, $this->properties) ? $this->properties[$name] : null;
-***REMOVED***
+		}
 
 		/**
 		 * @param string $name
 		 * @param mixed $value
 		 */
-		public function __set($name, $value) ***REMOVED***
+		public function __set($name, $value) {
 			$this->properties[$name] = $value;
-***REMOVED***
+		}
 
 		/**
 		 * @param string $name
 		 * @return bool
 		 */
-		public function __isset($name) ***REMOVED***
+		public function __isset($name) {
 			return isset($this->properties[$name]);
-***REMOVED***
+		}
 
-***REMOVED***
+	}
 
 endif;

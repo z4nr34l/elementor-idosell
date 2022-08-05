@@ -1,6 +1,6 @@
-jQuery(function($) ***REMOVED***
+jQuery(function($) {
 
-	function runAjaxAction(button, action) ***REMOVED***
+	function runAjaxAction(button, action) {
 		button = $(button);
 		var panel = button.closest('.puc-debug-bar-panel-v4');
 		var responseBox = button.closest('td').find('.puc-ajax-response');
@@ -8,34 +8,34 @@ jQuery(function($) ***REMOVED***
 		responseBox.text('Processing...').show();
 		$.post(
 			ajaxurl,
-			***REMOVED***
+			{
 				action  : action,
 				uid     : panel.data('uid'),
 				_wpnonce: panel.data('nonce')
-	***REMOVED***,
-			function(data) ***REMOVED***
+			},
+			function(data) {
 				responseBox.html(data);
-	***REMOVED***,
+			},
 			'html'
 		);
-***REMOVED***
+	}
 
-	$('.puc-debug-bar-panel-v4 input[name="puc-check-now-button"]').on('click', function() ***REMOVED***
+	$('.puc-debug-bar-panel-v4 input[name="puc-check-now-button"]').on('click', function() {
 		runAjaxAction(this, 'puc_v4_debug_check_now');
 		return false;
-***REMOVED***);
+	});
 
-	$('.puc-debug-bar-panel-v4 input[name="puc-request-info-button"]').on('click', function() ***REMOVED***
+	$('.puc-debug-bar-panel-v4 input[name="puc-request-info-button"]').on('click', function() {
 		runAjaxAction(this, 'puc_v4_debug_request_info');
 		return false;
-***REMOVED***);
+	});
 
 
 	// Debug Bar uses the panel class name as part of its link and container IDs. This means we can
 	// end up with multiple identical IDs if more than one plugin uses the update checker library.
 	// Fix it by replacing the class name with the plugin slug.
 	var panels = $('#debug-menu-targets').find('.puc-debug-bar-panel-v4');
-	panels.each(function() ***REMOVED***
+	panels.each(function() {
 		var panel = $(this);
 		var uid = panel.data('uid');
 		var target = panel.closest('.debug-menu-target');
@@ -48,5 +48,5 @@ jQuery(function($) ***REMOVED***
 			.closest('.debug-menu-link')
 			.attr('id', 'debug-menu-link-puc-' + uid)
 			.attr('href', '#' + target.attr('id'));
-***REMOVED***);
-***REMOVED***);
+	});
+});

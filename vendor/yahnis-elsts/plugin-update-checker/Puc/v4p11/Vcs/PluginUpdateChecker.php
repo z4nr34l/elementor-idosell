@@ -1,7 +1,7 @@
-***REMOVED***
+<?php
 if ( !class_exists('Puc_v4p11_Vcs_PluginUpdateChecker') ):
 
-	class Puc_v4p11_Vcs_PluginUpdateChecker extends Puc_v4p11_Plugin_UpdateChecker implements Puc_v4p11_Vcs_BaseChecker ***REMOVED***
+	class Puc_v4p11_Vcs_PluginUpdateChecker extends Puc_v4p11_Plugin_UpdateChecker implements Puc_v4p11_Vcs_BaseChecker {
 		/**
 		 * @var string The branch where to look for updates. Defaults to "master".
 		 */
@@ -22,21 +22,21 @@ if ( !class_exists('Puc_v4p11_Vcs_PluginUpdateChecker') ):
 		 * @param string $optionName
 		 * @param string $muPluginFile
 		 */
-		public function __construct($api, $pluginFile, $slug = '', $checkPeriod = 12, $optionName = '', $muPluginFile = '') ***REMOVED***
+		public function __construct($api, $pluginFile, $slug = '', $checkPeriod = 12, $optionName = '', $muPluginFile = '') {
 			$this->api = $api;
 			$this->api->setHttpFilterName($this->getUniqueName('request_info_options'));
 
 			parent::__construct($api->getRepositoryUrl(), $pluginFile, $slug, $checkPeriod, $optionName, $muPluginFile);
 
 			$this->api->setSlug($this->slug);
-***REMOVED***
+		}
 
-		public function requestInfo($unusedParameter = null) ***REMOVED***
+		public function requestInfo($unusedParameter = null) {
 			//We have to make several remote API requests to gather all the necessary info
 			//which can take a while on slow networks.
-			if ( function_exists('set_time_limit') ) ***REMOVED***
+			if ( function_exists('set_time_limit') ) {
 				@set_time_limit(60);
-	***REMOVED***
+			}
 
 			$api = $this->api;
 			$api->setLocalDirectory($this->package->getAbsoluteDirectoryPath());
@@ -49,19 +49,19 @@ if ( !class_exists('Puc_v4p11_Vcs_PluginUpdateChecker') ):
 
 			//Pick a branch or tag.
 			$updateSource = $api->chooseReference($this->branch);
-			if ( $updateSource ) ***REMOVED***
+			if ( $updateSource ) {
 				$ref = $updateSource->name;
 				$info->version = $updateSource->version;
 				$info->last_updated = $updateSource->updated;
 				$info->download_url = $updateSource->downloadUrl;
 
-				if ( !empty($updateSource->changelog) ) ***REMOVED***
+				if ( !empty($updateSource->changelog) ) {
 					$info->sections['changelog'] = $updateSource->changelog;
-		***REMOVED***
-				if ( isset($updateSource->downloadCount) ) ***REMOVED***
+				}
+				if ( isset($updateSource->downloadCount) ) {
 					$info->downloaded = $updateSource->downloadCount;
-		***REMOVED***
-	***REMOVED*** else ***REMOVED***
+				}
+			} else {
 				//There's probably a network problem or an authentication error.
 				do_action(
 					'puc_api_error',
@@ -72,53 +72,53 @@ if ( !class_exists('Puc_v4p11_Vcs_PluginUpdateChecker') ):
 						. 'to the repository or it\'s configured incorrectly.'
 					),
 					null, null, $this->slug
-	***REMOVED***
+				);
 				return null;
-	***REMOVED***
+			}
 
 			//Get headers from the main plugin file in this branch/tag. Its "Version" header and other metadata
 			//are what the WordPress install will actually see after upgrading, so they take precedence over releases/tags.
 			$mainPluginFile = basename($this->pluginFile);
 			$remotePlugin = $api->getRemoteFile($mainPluginFile, $ref);
-			if ( !empty($remotePlugin) ) ***REMOVED***
+			if ( !empty($remotePlugin) ) {
 				$remoteHeader = $this->package->getFileHeader($remotePlugin);
 				$this->setInfoFromHeader($remoteHeader, $info);
-	***REMOVED***
+			}
 
 			//Try parsing readme.txt. If it's formatted according to WordPress.org standards, it will contain
 			//a lot of useful information like the required/tested WP version, changelog, and so on.
-			if ( $this->readmeTxtExistsLocally() ) ***REMOVED***
+			if ( $this->readmeTxtExistsLocally() ) {
 				$this->setInfoFromRemoteReadme($ref, $info);
-	***REMOVED***
+			}
 
 			//The changelog might be in a separate file.
-			if ( empty($info->sections['changelog']) ) ***REMOVED***
+			if ( empty($info->sections['changelog']) ) {
 				$info->sections['changelog'] = $api->getRemoteChangelog($ref, $this->package->getAbsoluteDirectoryPath());
-				if ( empty($info->sections['changelog']) ) ***REMOVED***
+				if ( empty($info->sections['changelog']) ) {
 					$info->sections['changelog'] = __('There is no changelog available.', 'plugin-update-checker');
-		***REMOVED***
-	***REMOVED***
+				}
+			}
 
-			if ( empty($info->last_updated) ) ***REMOVED***
+			if ( empty($info->last_updated) ) {
 				//Fetch the latest commit that changed the tag or branch and use it as the "last_updated" date.
 				$latestCommitTime = $api->getLatestCommitTime($ref);
-				if ( $latestCommitTime !== null ) ***REMOVED***
+				if ( $latestCommitTime !== null ) {
 					$info->last_updated = $latestCommitTime;
-		***REMOVED***
-	***REMOVED***
+				}
+			}
 
 			$info = apply_filters($this->getUniqueName('request_info_result'), $info, null);
 			return $info;
-***REMOVED***
+		}
 
 		/**
 		 * Check if the currently installed version has a readme.txt file.
 		 *
 		 * @return bool
 		 */
-		protected function readmeTxtExistsLocally() ***REMOVED***
+		protected function readmeTxtExistsLocally() {
 			return $this->package->fileExists($this->api->getLocalReadmeName());
-***REMOVED***
+		}
 
 		/**
 		 * Copy plugin metadata from a file header to a Plugin Info object.
@@ -126,7 +126,7 @@ if ( !class_exists('Puc_v4p11_Vcs_PluginUpdateChecker') ):
 		 * @param array $fileHeader
 		 * @param Puc_v4p11_Plugin_Info $pluginInfo
 		 */
-		protected function setInfoFromHeader($fileHeader, $pluginInfo) ***REMOVED***
+		protected function setInfoFromHeader($fileHeader, $pluginInfo) {
 			$headerToPropertyMap = array(
 				'Version' => 'version',
 				'Name' => 'name',
@@ -141,17 +141,17 @@ if ( !class_exists('Puc_v4p11_Vcs_PluginUpdateChecker') ):
 				'Tested up to' => 'tested',
 
 				'Requires PHP' => 'requires_php',
-***REMOVED***
-			foreach ($headerToPropertyMap as $headerName => $property) ***REMOVED***
-				if ( isset($fileHeader[$headerName]) && !empty($fileHeader[$headerName]) ) ***REMOVED***
+			);
+			foreach ($headerToPropertyMap as $headerName => $property) {
+				if ( isset($fileHeader[$headerName]) && !empty($fileHeader[$headerName]) ) {
 					$pluginInfo->$property = $fileHeader[$headerName];
-		***REMOVED***
-	***REMOVED***
+				}
+			}
 
-			if ( !empty($fileHeader['Description']) ) ***REMOVED***
+			if ( !empty($fileHeader['Description']) ) {
 				$pluginInfo->sections['description'] = $fileHeader['Description'];
-	***REMOVED***
-***REMOVED***
+			}
+		}
 
 		/**
 		 * Copy plugin metadata from the remote readme.txt file.
@@ -159,60 +159,60 @@ if ( !class_exists('Puc_v4p11_Vcs_PluginUpdateChecker') ):
 		 * @param string $ref GitHub tag or branch where to look for the readme.
 		 * @param Puc_v4p11_Plugin_Info $pluginInfo
 		 */
-		protected function setInfoFromRemoteReadme($ref, $pluginInfo) ***REMOVED***
+		protected function setInfoFromRemoteReadme($ref, $pluginInfo) {
 			$readme = $this->api->getRemoteReadme($ref);
-			if ( empty($readme) ) ***REMOVED***
+			if ( empty($readme) ) {
 				return;
-	***REMOVED***
+			}
 
-			if ( isset($readme['sections']) ) ***REMOVED***
+			if ( isset($readme['sections']) ) {
 				$pluginInfo->sections = array_merge($pluginInfo->sections, $readme['sections']);
-	***REMOVED***
-			if ( !empty($readme['tested_up_to']) ) ***REMOVED***
+			}
+			if ( !empty($readme['tested_up_to']) ) {
 				$pluginInfo->tested = $readme['tested_up_to'];
-	***REMOVED***
-			if ( !empty($readme['requires_at_least']) ) ***REMOVED***
+			}
+			if ( !empty($readme['requires_at_least']) ) {
 				$pluginInfo->requires = $readme['requires_at_least'];
-	***REMOVED***
-			if ( !empty($readme['requires_php']) ) ***REMOVED***
+			}
+			if ( !empty($readme['requires_php']) ) {
 				$pluginInfo->requires_php = $readme['requires_php'];
-	***REMOVED***
+			}
 
-			if ( isset($readme['upgrade_notice'], $readme['upgrade_notice'][$pluginInfo->version]) ) ***REMOVED***
+			if ( isset($readme['upgrade_notice'], $readme['upgrade_notice'][$pluginInfo->version]) ) {
 				$pluginInfo->upgrade_notice = $readme['upgrade_notice'][$pluginInfo->version];
-	***REMOVED***
-***REMOVED***
+			}
+		}
 
-		public function setBranch($branch) ***REMOVED***
+		public function setBranch($branch) {
 			$this->branch = $branch;
 			return $this;
-***REMOVED***
+		}
 
-		public function setAuthentication($credentials) ***REMOVED***
+		public function setAuthentication($credentials) {
 			$this->api->setAuthentication($credentials);
 			return $this;
-***REMOVED***
+		}
 
-		public function getVcsApi() ***REMOVED***
+		public function getVcsApi() {
 			return $this->api;
-***REMOVED***
+		}
 
-		public function getUpdate() ***REMOVED***
+		public function getUpdate() {
 			$update = parent::getUpdate();
 
-			if ( isset($update) && !empty($update->download_url) ) ***REMOVED***
+			if ( isset($update) && !empty($update->download_url) ) {
 				$update->download_url = $this->api->signDownloadUrl($update->download_url);
-	***REMOVED***
+			}
 
 			return $update;
-***REMOVED***
+		}
 
-		public function onDisplayConfiguration($panel) ***REMOVED***
+		public function onDisplayConfiguration($panel) {
 			parent::onDisplayConfiguration($panel);
 			$panel->row('Branch', $this->branch);
 			$panel->row('Authentication enabled', $this->api->isAuthenticationEnabled() ? 'Yes' : 'No');
 			$panel->row('API client', get_class($this->api));
-***REMOVED***
-***REMOVED***
+		}
+	}
 
 endif;

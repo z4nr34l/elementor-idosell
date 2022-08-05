@@ -1,4 +1,4 @@
-***REMOVED***
+<?php
 if ( !class_exists('Puc_v4p11_Plugin_Update', false) ):
 
 	/**
@@ -8,7 +8,7 @@ if ( !class_exists('Puc_v4p11_Plugin_Update', false) ):
 	 * @copyright 2016
 	 * @access public
 	 */
-	class Puc_v4p11_Plugin_Update extends Puc_v4p11_Update ***REMOVED***
+	class Puc_v4p11_Plugin_Update extends Puc_v4p11_Update {
 		public $id = 0;
 		public $homepage;
 		public $upgrade_notice;
@@ -27,17 +27,17 @@ if ( !class_exists('Puc_v4p11_Plugin_Update', false) ):
 		 * @param string $json
 		 * @return Puc_v4p11_Plugin_Update|null
 		 */
-		public static function fromJson($json)***REMOVED***
+		public static function fromJson($json){
 			//Since update-related information is simply a subset of the full plugin info,
 			//we can parse the update JSON as if it was a plugin info string, then copy over
 			//the parts that we care about.
 			$pluginInfo = Puc_v4p11_Plugin_Info::fromJson($json);
-			if ( $pluginInfo !== null ) ***REMOVED***
+			if ( $pluginInfo !== null ) {
 				return self::fromPluginInfo($pluginInfo);
-	***REMOVED*** else ***REMOVED***
+			} else {
 				return null;
-	***REMOVED***
-***REMOVED***
+			}
+		}
 
 		/**
 		 * Create a new instance of PluginUpdate based on an instance of PluginInfo.
@@ -46,9 +46,9 @@ if ( !class_exists('Puc_v4p11_Plugin_Update', false) ):
 		 * @param Puc_v4p11_Plugin_Info $info
 		 * @return Puc_v4p11_Plugin_Update
 		 */
-		public static function fromPluginInfo($info)***REMOVED***
+		public static function fromPluginInfo($info){
 			return self::fromObject($info);
-***REMOVED***
+		}
 
 		/**
 		 * Create a new instance by copying the necessary fields from another object.
@@ -56,25 +56,25 @@ if ( !class_exists('Puc_v4p11_Plugin_Update', false) ):
 		 * @param StdClass|Puc_v4p11_Plugin_Info|Puc_v4p11_Plugin_Update $object The source object.
 		 * @return Puc_v4p11_Plugin_Update The new copy.
 		 */
-		public static function fromObject($object) ***REMOVED***
+		public static function fromObject($object) {
 			$update = new self();
 			$update->copyFields($object, $update);
 			return $update;
-***REMOVED***
+		}
 
 		/**
 		 * @return string[]
 		 */
-		protected function getFieldNames() ***REMOVED***
+		protected function getFieldNames() {
 			return array_merge(parent::getFieldNames(), self::$extraFields);
-***REMOVED***
+		}
 
 		/**
 		 * Transform the update into the format used by WordPress native plugin API.
 		 *
 		 * @return object
 		 */
-		public function toWpFormat() ***REMOVED***
+		public function toWpFormat() {
 			$update = parent::toWpFormat();
 
 			$update->id = $this->id;
@@ -83,30 +83,30 @@ if ( !class_exists('Puc_v4p11_Plugin_Update', false) ):
 			$update->requires_php = $this->requires_php;
 			$update->plugin = $this->filename;
 
-			if ( !empty($this->upgrade_notice) ) ***REMOVED***
+			if ( !empty($this->upgrade_notice) ) {
 				$update->upgrade_notice = $this->upgrade_notice;
-	***REMOVED***
+			}
 
-			if ( !empty($this->icons) && is_array($this->icons) ) ***REMOVED***
+			if ( !empty($this->icons) && is_array($this->icons) ) {
 				//This should be an array with up to 4 keys: 'svg', '1x', '2x' and 'default'.
 				//Docs: https://developer.wordpress.org/plugins/wordpress-org/plugin-assets/#plugin-icons
 				$icons = array_intersect_key(
 					$this->icons,
 					array('svg' => true, '1x' => true, '2x' => true, 'default' => true)
-	***REMOVED***
-				if ( !empty($icons) ) ***REMOVED***
+				);
+				if ( !empty($icons) ) {
 					$update->icons = $icons;
 
 					//It appears that the 'default' icon isn't used anywhere in WordPress 4.9,
 					//but lets set it just in case a future release needs it.
-					if ( !isset($update->icons['default']) ) ***REMOVED***
+					if ( !isset($update->icons['default']) ) {
 						$update->icons['default'] = current($update->icons);
-			***REMOVED***
-		***REMOVED***
-	***REMOVED***
+					}
+				}
+			}
 
 			return $update;
-***REMOVED***
-***REMOVED***
+		}
+	}
 
 endif;

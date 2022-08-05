@@ -1,4 +1,4 @@
-***REMOVED***
+<?php
 
 if ( !class_exists('PucReadmeParser', false) ):
 
@@ -7,18 +7,18 @@ if ( !class_exists('PucReadmeParser', false) ):
  * It uses Parsedown instead of the "Markdown Extra" parser.
  */
 
-class PucReadmeParser ***REMOVED***
+class PucReadmeParser {
 
-	function __construct() ***REMOVED***
+	function __construct() {
 		// This space intentionally blank
-***REMOVED***
+	}
 
-	function parse_readme( $file ) ***REMOVED***
+	function parse_readme( $file ) {
 		$file_contents = @implode('', @file($file));
 		return $this->parse_readme_contents( $file_contents );
-***REMOVED***
+	}
 
-	function parse_readme_contents( $file_contents ) ***REMOVED***
+	function parse_readme_contents( $file_contents ) {
 		$file_contents = str_replace(array("\r\n", "\r"), "\n", $file_contents);
 		$file_contents = trim($file_contents);
 		if ( 0 === strpos( $file_contents, "\xEF\xBB\xBF" ) )
@@ -53,11 +53,11 @@ class PucReadmeParser ***REMOVED***
 			$tested_up_to = NULL;
 
 		// Requires PHP: 5.2.4
-		if ( preg_match('|Requires PHP:(.*)|i', $file_contents, $_requires_php) ) ***REMOVED***
+		if ( preg_match('|Requires PHP:(.*)|i', $file_contents, $_requires_php) ) {
 			$requires_php = $this->sanitize_text( $_requires_php[1] );
-***REMOVED*** else ***REMOVED***
+		} else {
 			$requires_php = null;
-***REMOVED***
+		}
 
 		// Stable tag: 10.4-ride-the-fire-eagle-danger-day
 		if ( preg_match('|Stable tag:(.*)|i', $file_contents, $_stable_tag) )
@@ -67,26 +67,26 @@ class PucReadmeParser ***REMOVED***
 
 
 		// Tags: some tag, another tag, we like tags
-		if ( preg_match('|Tags:(.*)|i', $file_contents, $_tags) ) ***REMOVED***
+		if ( preg_match('|Tags:(.*)|i', $file_contents, $_tags) ) {
 			$tags = preg_split('|,[\s]*?|', trim($_tags[1]));
 			foreach ( array_keys($tags) as $t )
 				$tags[$t] = $this->sanitize_text( $tags[$t] );
-***REMOVED*** else ***REMOVED***
+		} else {
 			$tags = array();
-***REMOVED***
+		}
 
 
 		// Contributors: markjaquith, mdawaffe, zefrank
 		$contributors = array();
-		if ( preg_match('|Contributors:(.*)|i', $file_contents, $_contributors) ) ***REMOVED***
+		if ( preg_match('|Contributors:(.*)|i', $file_contents, $_contributors) ) {
 			$temp_contributors = preg_split('|,[\s]*|', trim($_contributors[1]));
-			foreach ( array_keys($temp_contributors) as $c ) ***REMOVED***
+			foreach ( array_keys($temp_contributors) as $c ) {
 				$tmp_sanitized = $this->user_sanitize( $temp_contributors[$c] );
 				if ( strlen(trim($tmp_sanitized)) > 0 )
 					$contributors[$c] = $tmp_sanitized;
 				unset($tmp_sanitized);
-	***REMOVED***
-***REMOVED***
+			}
+		}
 
 
 		// Donate Link: URL
@@ -97,12 +97,12 @@ class PucReadmeParser ***REMOVED***
 
 
 		// togs, conts, etc are optional and order shouldn't matter.  So we chop them only after we've grabbed their values.
-		foreach ( array('tags', 'contributors', 'requires_at_least', 'tested_up_to', 'stable_tag', 'donate_link') as $chop ) ***REMOVED***
-			if ( $$chop ) ***REMOVED***
+		foreach ( array('tags', 'contributors', 'requires_at_least', 'tested_up_to', 'stable_tag', 'donate_link') as $chop ) {
+			if ( $$chop ) {
 				$_chop = '_' . $chop;
-				$file_contents = $this->chop_string( $file_contents, $***REMOVED***$_chop***REMOVED***[0] );
-	***REMOVED***
-***REMOVED***
+				$file_contents = $this->chop_string( $file_contents, ${$_chop}[0] );
+			}
+		}
 
 		$file_contents = trim($file_contents);
 
@@ -127,70 +127,70 @@ class PucReadmeParser ***REMOVED***
 		$_sections = preg_split('/^[\s]*==[\s]*(.+?)[\s]*==/m', $file_contents, -1, PREG_SPLIT_DELIM_CAPTURE|PREG_SPLIT_NO_EMPTY);
 
 		$sections = array();
-		for ( $i=0; $i < count($_sections); $i +=2 ) ***REMOVED***
+		for ( $i=0; $i < count($_sections); $i +=2 ) {
 			$title = $this->sanitize_text( $_sections[$i] );
-			if ( isset($_sections[$i+1]) ) ***REMOVED***
+			if ( isset($_sections[$i+1]) ) {
 				$content = preg_replace('/(^[\s]*)=[\s]+(.+?)[\s]+=/m', '$1<h4>$2</h4>', $_sections[$i+1]);
 				$content = $this->filter_text( $content, true );
-	***REMOVED*** else ***REMOVED***
+			} else {
 				$content = '';
-	***REMOVED***
+			}
 			$sections[str_replace(' ', '_', strtolower($title))] = array('title' => $title, 'content' => $content);
-***REMOVED***
+		}
 
 
 		// Special sections
 		// This is where we nab our special sections, so we can enforce their order and treat them differently, if needed
 		// upgrade_notice is not a section, but parse it like it is for now
 		$final_sections = array();
-		foreach ( array('description', 'installation', 'frequently_asked_questions', 'screenshots', 'changelog', 'change_log', 'upgrade_notice') as $special_section ) ***REMOVED***
-			if ( isset($sections[$special_section]) ) ***REMOVED***
+		foreach ( array('description', 'installation', 'frequently_asked_questions', 'screenshots', 'changelog', 'change_log', 'upgrade_notice') as $special_section ) {
+			if ( isset($sections[$special_section]) ) {
 				$final_sections[$special_section] = $sections[$special_section]['content'];
 				unset($sections[$special_section]);
-	***REMOVED***
-***REMOVED***
+			}
+		}
 		if ( isset($final_sections['change_log']) && empty($final_sections['changelog']) )
 			$final_sections['changelog'] = $final_sections['change_log'];
 
 
 		$final_screenshots = array();
-		if ( isset($final_sections['screenshots']) ) ***REMOVED***
+		if ( isset($final_sections['screenshots']) ) {
 			preg_match_all('|<li>(.*?)</li>|s', $final_sections['screenshots'], $screenshots, PREG_SET_ORDER);
-			if ( $screenshots ) ***REMOVED***
+			if ( $screenshots ) {
 				foreach ( (array) $screenshots as $ss )
 					$final_screenshots[] = $ss[1];
-	***REMOVED***
-***REMOVED***
+			}
+		}
 
 		// Parse the upgrade_notice section specially:
 		// 1.0 => blah, 1.1 => fnord
 		$upgrade_notice = array();
-		if ( isset($final_sections['upgrade_notice']) ) ***REMOVED***
+		if ( isset($final_sections['upgrade_notice']) ) {
 			$split = preg_split( '#<h4>(.*?)</h4>#', $final_sections['upgrade_notice'], -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY );
-			if ( count($split) >= 2 ) ***REMOVED***
-				for ( $i = 0; $i < count( $split ); $i += 2 ) ***REMOVED***
+			if ( count($split) >= 2 ) {
+				for ( $i = 0; $i < count( $split ); $i += 2 ) {
 					$upgrade_notice[$this->sanitize_text( $split[$i] )] = substr( $this->sanitize_text( $split[$i + 1] ), 0, 300 );
-		***REMOVED***
-	***REMOVED***
+				}
+			}
 			unset( $final_sections['upgrade_notice'] );
-***REMOVED***
+		}
 
 		// No description?
 		// No problem... we'll just fall back to the old style of description
 		// We'll even let you use markup this time!
 		$excerpt = false;
-		if ( !isset($final_sections['description']) ) ***REMOVED***
+		if ( !isset($final_sections['description']) ) {
 			$final_sections = array_merge(array('description' => $this->filter_text( $_short_description[2], true )), $final_sections);
 			$excerpt = true;
-***REMOVED***
+		}
 
 
 		// dump the non-special sections into $remaining_content
 		// their order will be determined by their original order in the readme.txt
 		$remaining_content = '';
-		foreach ( $sections as $s_name => $s_data ) ***REMOVED***
-			$remaining_content .= "\n<h3>***REMOVED***$s_data['title']***REMOVED***</h3>\n***REMOVED***$s_data['content']***REMOVED***";
-***REMOVED***
+		foreach ( $sections as $s_name => $s_data ) {
+			$remaining_content .= "\n<h3>{$s_data['title']}</h3>\n{$s_data['content']}";
+		}
 		$remaining_content = trim($remaining_content);
 
 
@@ -216,50 +216,50 @@ class PucReadmeParser ***REMOVED***
 		);
 
 		return $r;
-***REMOVED***
+	}
 
-	function chop_string( $string, $chop ) ***REMOVED*** // chop a "prefix" from a string: Agressive! uses strstr not 0 === strpos
-		if ( $_string = strstr($string, $chop) ) ***REMOVED***
+	function chop_string( $string, $chop ) { // chop a "prefix" from a string: Agressive! uses strstr not 0 === strpos
+		if ( $_string = strstr($string, $chop) ) {
 			$_string = substr($_string, strlen($chop));
 			return trim($_string);
-***REMOVED*** else ***REMOVED***
+		} else {
 			return trim($string);
-***REMOVED***
-***REMOVED***
+		}
+	}
 
-	function user_sanitize( $text, $strict = false ) ***REMOVED*** // whitelisted chars
+	function user_sanitize( $text, $strict = false ) { // whitelisted chars
 		if ( function_exists('user_sanitize') ) // bbPress native
 			return user_sanitize( $text, $strict );
 
-		if ( $strict ) ***REMOVED***
+		if ( $strict ) {
 			$text = preg_replace('/[^a-z0-9-]/i', '', $text);
 			$text = preg_replace('|-+|', '-', $text);
-***REMOVED*** else ***REMOVED***
+		} else {
 			$text = preg_replace('/[^a-z0-9_-]/i', '', $text);
-***REMOVED***
+		}
 		return $text;
-***REMOVED***
+	}
 
-	function sanitize_text( $text ) ***REMOVED*** // not fancy
+	function sanitize_text( $text ) { // not fancy
 		$text = strip_tags($text);
 		$text = esc_html($text);
 		$text = trim($text);
 		return $text;
-***REMOVED***
+	}
 
-	function filter_text( $text, $markdown = false ) ***REMOVED*** // fancy, Markdown
+	function filter_text( $text, $markdown = false ) { // fancy, Markdown
 		$text = trim($text);
 
 		$text = call_user_func( array( __CLASS__, 'code_trick' ), $text, $markdown ); // A better parser than Markdown's for: backticks -> CODE
 
-		if ( $markdown ) ***REMOVED*** // Parse markdown.
-			if ( !class_exists('Parsedown', false) ) ***REMOVED***
+		if ( $markdown ) { // Parse markdown.
+			if ( !class_exists('Parsedown', false) ) {
 				/** @noinspection PhpIncludeInspection */
 				require_once(dirname(__FILE__) . '/Parsedown' . (version_compare(PHP_VERSION, '5.3.0', '>=') ? '' : 'Legacy') . '.php');
-	***REMOVED***
+			}
 			$instance = Parsedown::instance();
 			$text = $instance->text($text);
-***REMOVED***
+		}
 
 		$allowed = array(
 			'a' => array(
@@ -285,34 +285,34 @@ class PucReadmeParser ***REMOVED***
 		$text = wp_kses( $text, $allowed );
 		$text = trim($text);
 		return $text;
-***REMOVED***
+	}
 
-	function code_trick( $text, $markdown ) ***REMOVED*** // Don't use bbPress native function - it's incompatible with Markdown
+	function code_trick( $text, $markdown ) { // Don't use bbPress native function - it's incompatible with Markdown
 		// If doing markdown, first take any user formatted code blocks and turn them into backticks so that
 		// markdown will preserve things like underscores in code blocks
 		if ( $markdown )
 			$text = preg_replace_callback("!(<pre><code>|<code>)(.*?)(</code></pre>|</code>)!s", array( __CLASS__,'decodeit'), $text);
 
 		$text = str_replace(array("\r\n", "\r"), "\n", $text);
-		if ( !$markdown ) ***REMOVED***
+		if ( !$markdown ) {
 			// This gets the "inline" code blocks, but can't be used with Markdown.
 			$text = preg_replace_callback("|(`)(.*?)`|", array( __CLASS__, 'encodeit'), $text);
 			// This gets the "block level" code blocks and converts them to PRE CODE
 			$text = preg_replace_callback("!(^|\n)`(.*?)`!s", array( __CLASS__, 'encodeit'), $text);
-***REMOVED*** else ***REMOVED***
+		} else {
 			// Markdown can do inline code, we convert bbPress style block level code to Markdown style
 			$text = preg_replace_callback("!(^|\n)([ \t]*?)`(.*?)`!s", array( __CLASS__, 'indent'), $text);
-***REMOVED***
+		}
 		return $text;
-***REMOVED***
+	}
 
-	function indent( $matches ) ***REMOVED***
+	function indent( $matches ) {
 		$text = $matches[3];
 		$text = preg_replace('|^|m', $matches[2] . '    ', $text);
 		return $matches[1] . $text;
-***REMOVED***
+	}
 
-	function encodeit( $matches ) ***REMOVED***
+	function encodeit( $matches ) {
 		if ( function_exists('encodeit') ) // bbPress native
 			return encodeit( $matches );
 
@@ -326,9 +326,9 @@ class PucReadmeParser ***REMOVED***
 		if ( "`" != $matches[1] )
 			$text = "<pre>$text</pre>";
 		return $text;
-***REMOVED***
+	}
 
-	function decodeit( $matches ) ***REMOVED***
+	function decodeit( $matches ) {
 		if ( function_exists('decodeit') ) // bbPress native
 			return decodeit( $matches );
 
@@ -341,8 +341,8 @@ class PucReadmeParser ***REMOVED***
 		if ( '<pre><code>' == $matches[1] )
 			$text = "\n$text\n";
 		return "`$text`";
-***REMOVED***
+	}
 
-***REMOVED*** // end class
+} // end class
 
 endif;

@@ -1,12 +1,12 @@
-***REMOVED***
+<?php
 
 namespace ElementorIdosell\Tags;
 
-***REMOVED***
+use Exception;
 
-if ( ! defined( 'ABSPATH' ) ) ***REMOVED***
+if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
-***REMOVED***
+}
 
 /**
  * Elementor Dynamic Tag - Random Number
@@ -15,17 +15,17 @@ if ( ! defined( 'ABSPATH' ) ) ***REMOVED***
  *
  * @since 1.0.0
  */
-class RetailPrice extends \Elementor\Core\DynamicTags\Tag ***REMOVED***
+class RetailPrice extends \Elementor\Core\DynamicTags\Tag {
 
-***REMOVED***
+	public string $table_name = "idosell_products";
 
 	/**
 	 * Class constructor
 	 * @param array $data
 	 */
-	public function __construct( array $data = [] ) ***REMOVED***
+	public function __construct( array $data = [] ) {
 		parent::__construct( $data );
-***REMOVED***
+	}
 
 	/**
 	 * Get dynamic tag name.
@@ -36,9 +36,9 @@ class RetailPrice extends \Elementor\Core\DynamicTags\Tag ***REMOVED***
 	 * @access public
 	 * @return string Dynamic tag name.
 	 */
-	public function get_name() ***REMOVED***
+	public function get_name() {
 		return 'retail-price';
-***REMOVED***
+	}
 
 	/**
 	 * Get dynamic tag title.
@@ -49,9 +49,9 @@ class RetailPrice extends \Elementor\Core\DynamicTags\Tag ***REMOVED***
 	 * @access public
 	 * @return string Dynamic tag title.
 	 */
-	public function get_title() ***REMOVED***
+	public function get_title() {
 		return esc_html__( 'Retail price', 'elementor-idosell-retail-price-tag' );
-***REMOVED***
+	}
 
 	/**
 	 * Get dynamic tag groups.
@@ -62,9 +62,9 @@ class RetailPrice extends \Elementor\Core\DynamicTags\Tag ***REMOVED***
 	 * @access public
 	 * @return array Dynamic tag groups.
 	 */
-	public function get_group() ***REMOVED***
+	public function get_group() {
 		return [ 'idosell' ];
-***REMOVED***
+	}
 
 	/**
 	 * Get dynamic tag categories.
@@ -75,44 +75,48 @@ class RetailPrice extends \Elementor\Core\DynamicTags\Tag ***REMOVED***
 	 * @access public
 	 * @return array Dynamic tag categories.
 	 */
-	public function get_categories() ***REMOVED***
+	public function get_categories() {
 		return [
 			\Elementor\Modules\DynamicTags\Module::TEXT_CATEGORY,
 			\Elementor\Modules\DynamicTags\Module::NUMBER_CATEGORY
 		];
-***REMOVED***
+	}
 
-  protected function getDbData($input) ***REMOVED***
+  protected function getDbData($input) {
 	  global $wpdb;
 
 	  $cache = wp_cache_get($input, 'idosell_prices');
-	  if($cache) ***REMOVED***
+	  if($cache) {
 		  return $cache;
-	  ***REMOVED*** else ***REMOVED***
-		  try ***REMOVED***
+	  } else {
+		  try {
 			  $sql = "SELECT `price` FROM " . $wpdb->prefix.$this->table_name . " WHERE `id` LIKE %s OR `product_sizecode` LIKE %s OR `sku` LIKE %s OR `code_producer` LIKE %s";
 			  $sql = $wpdb->prepare($sql, $input, $input, $input, $input);
 			  $result = $wpdb->get_results($sql)[0]->price;
 			  wp_cache_set($input, $result, 'idosell_prices', 86400);
 			  return $result;
-		  ***REMOVED*** catch(Exception $exception) ***REMOVED***
+		  } catch(Exception $exception) {
 			  throw $exception;
-		  ***REMOVED***
-	  ***REMOVED***
-  ***REMOVED***
+		  }
+	  }
+  }
 
-	protected function getData($input) ***REMOVED***
-    if(isset($input) && $input !== "") ***REMOVED***
-      return $this->getDbData($input);
-    ***REMOVED*** else ***REMOVED***
-      $acf_field = get_field('product_in');
-      if(isset($acf_field) && $acf_field !== "") ***REMOVED***
-	      return $this->getDbData($acf_field);
-      ***REMOVED*** else ***REMOVED***
-	      return null;
-      ***REMOVED***
-    ***REMOVED***
-***REMOVED***
+	protected function getData($input) {
+        if(isset($input) && $input !== "") {
+          return $this->getDbData($input);
+        } else {
+            if(function_exists('get_field')) {
+                $acf_field = get_field('product_in');
+                if(isset($acf_field) && $acf_field !== "") {
+                    return $this->getDbData($acf_field);
+                } else {
+                    return null;
+                }
+            } else {
+                return null;
+            }
+        }
+	}
 
 	/**
 	 * Register dynamic tag controls.
@@ -123,7 +127,7 @@ class RetailPrice extends \Elementor\Core\DynamicTags\Tag ***REMOVED***
 	 * @access protected
 	 * @return void
 	 */
-	protected function register_controls() ***REMOVED***
+	protected function register_controls() {
 		$this->add_control(
 			'prefix',
 			[
@@ -145,7 +149,7 @@ class RetailPrice extends \Elementor\Core\DynamicTags\Tag ***REMOVED***
 				'type' => 'text',
 			]
 		);
-***REMOVED***
+	}
 
 	/**
 	 * Render tag output on the frontend.
@@ -157,8 +161,8 @@ class RetailPrice extends \Elementor\Core\DynamicTags\Tag ***REMOVED***
 	 * @since 1.0.0
 	 * @access public
 	 */
-	public function render() ***REMOVED***
-		?><p>***REMOVED*** echo $this->get_settings('prefix') ?>***REMOVED*** echo number_format((float) $this->getData($this->get_settings('input')), 2, ',', ' '); ?>***REMOVED*** echo $this->get_settings('currency') ?></p>***REMOVED***
-***REMOVED***
+	public function render() {
+		?><p><?php echo $this->get_settings('prefix') ?><?php echo number_format((float) $this->getData($this->get_settings('input')), 2, ',', ' '); ?><?php echo $this->get_settings('currency') ?></p><?php
+	}
 
-***REMOVED***
+}

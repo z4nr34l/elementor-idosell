@@ -1,4 +1,4 @@
-***REMOVED***
+<?php
 
 
 
@@ -21,7 +21,7 @@ use Composer\Semver\VersionParser;
 
 
 class InstalledVersions
-***REMOVED***
+{
 private static $installed = array (
   'root' => 
   array (
@@ -65,19 +65,19 @@ private static $installedByVendor = array();
 
 
 public static function getInstalledPackages()
-***REMOVED***
+{
 $packages = array();
-foreach (self::getInstalled() as $installed) ***REMOVED***
+foreach (self::getInstalled() as $installed) {
 $packages[] = array_keys($installed['versions']);
-***REMOVED***
+}
 
 
-if (1 === \count($packages)) ***REMOVED***
+if (1 === \count($packages)) {
 return $packages[0];
-***REMOVED***
+}
 
 return array_keys(array_flip(\call_user_func_array('array_merge', $packages)));
-***REMOVED***
+}
 
 
 
@@ -88,15 +88,15 @@ return array_keys(array_flip(\call_user_func_array('array_merge', $packages)));
 
 
 public static function isInstalled($packageName)
-***REMOVED***
-foreach (self::getInstalled() as $installed) ***REMOVED***
-if (isset($installed['versions'][$packageName])) ***REMOVED***
+{
+foreach (self::getInstalled() as $installed) {
+if (isset($installed['versions'][$packageName])) {
 return true;
-***REMOVED***
-***REMOVED***
+}
+}
 
 return false;
-***REMOVED***
+}
 
 
 
@@ -112,12 +112,12 @@ return false;
 
 
 public static function satisfies(VersionParser $parser, $packageName, $constraint)
-***REMOVED***
+{
 $constraint = $parser->parseConstraints($constraint);
 $provided = $parser->parseConstraints(self::getVersionRanges($packageName));
 
 return $provided->matches($constraint);
-***REMOVED***
+}
 
 
 
@@ -129,105 +129,105 @@ return $provided->matches($constraint);
 
 
 public static function getVersionRanges($packageName)
-***REMOVED***
-foreach (self::getInstalled() as $installed) ***REMOVED***
-if (!isset($installed['versions'][$packageName])) ***REMOVED***
+{
+foreach (self::getInstalled() as $installed) {
+if (!isset($installed['versions'][$packageName])) {
 continue;
-***REMOVED***
+}
 
 $ranges = array();
-if (isset($installed['versions'][$packageName]['pretty_version'])) ***REMOVED***
+if (isset($installed['versions'][$packageName]['pretty_version'])) {
 $ranges[] = $installed['versions'][$packageName]['pretty_version'];
-***REMOVED***
-if (array_key_exists('aliases', $installed['versions'][$packageName])) ***REMOVED***
+}
+if (array_key_exists('aliases', $installed['versions'][$packageName])) {
 $ranges = array_merge($ranges, $installed['versions'][$packageName]['aliases']);
-***REMOVED***
-if (array_key_exists('replaced', $installed['versions'][$packageName])) ***REMOVED***
+}
+if (array_key_exists('replaced', $installed['versions'][$packageName])) {
 $ranges = array_merge($ranges, $installed['versions'][$packageName]['replaced']);
-***REMOVED***
-if (array_key_exists('provided', $installed['versions'][$packageName])) ***REMOVED***
+}
+if (array_key_exists('provided', $installed['versions'][$packageName])) {
 $ranges = array_merge($ranges, $installed['versions'][$packageName]['provided']);
-***REMOVED***
+}
 
 return implode(' || ', $ranges);
-***REMOVED***
+}
 
 throw new \OutOfBoundsException('Package "' . $packageName . '" is not installed');
-***REMOVED***
+}
 
 
 
 
 
 public static function getVersion($packageName)
-***REMOVED***
-foreach (self::getInstalled() as $installed) ***REMOVED***
-if (!isset($installed['versions'][$packageName])) ***REMOVED***
+{
+foreach (self::getInstalled() as $installed) {
+if (!isset($installed['versions'][$packageName])) {
 continue;
-***REMOVED***
+}
 
-if (!isset($installed['versions'][$packageName]['version'])) ***REMOVED***
+if (!isset($installed['versions'][$packageName]['version'])) {
 return null;
-***REMOVED***
+}
 
 return $installed['versions'][$packageName]['version'];
-***REMOVED***
+}
 
 throw new \OutOfBoundsException('Package "' . $packageName . '" is not installed');
-***REMOVED***
+}
 
 
 
 
 
 public static function getPrettyVersion($packageName)
-***REMOVED***
-foreach (self::getInstalled() as $installed) ***REMOVED***
-if (!isset($installed['versions'][$packageName])) ***REMOVED***
+{
+foreach (self::getInstalled() as $installed) {
+if (!isset($installed['versions'][$packageName])) {
 continue;
-***REMOVED***
+}
 
-if (!isset($installed['versions'][$packageName]['pretty_version'])) ***REMOVED***
+if (!isset($installed['versions'][$packageName]['pretty_version'])) {
 return null;
-***REMOVED***
+}
 
 return $installed['versions'][$packageName]['pretty_version'];
-***REMOVED***
+}
 
 throw new \OutOfBoundsException('Package "' . $packageName . '" is not installed');
-***REMOVED***
+}
 
 
 
 
 
 public static function getReference($packageName)
-***REMOVED***
-foreach (self::getInstalled() as $installed) ***REMOVED***
-if (!isset($installed['versions'][$packageName])) ***REMOVED***
+{
+foreach (self::getInstalled() as $installed) {
+if (!isset($installed['versions'][$packageName])) {
 continue;
-***REMOVED***
+}
 
-if (!isset($installed['versions'][$packageName]['reference'])) ***REMOVED***
+if (!isset($installed['versions'][$packageName]['reference'])) {
 return null;
-***REMOVED***
+}
 
 return $installed['versions'][$packageName]['reference'];
-***REMOVED***
+}
 
 throw new \OutOfBoundsException('Package "' . $packageName . '" is not installed');
-***REMOVED***
+}
 
 
 
 
 
 public static function getRootPackage()
-***REMOVED***
+{
 $installed = self::getInstalled();
 
 return $installed[0]['root'];
-***REMOVED***
+}
 
 
 
@@ -236,9 +236,9 @@ return $installed[0]['root'];
 
 
 public static function getRawData()
-***REMOVED***
+{
 return self::$installed;
-***REMOVED***
+}
 
 
 
@@ -259,35 +259,35 @@ return self::$installed;
 
 
 public static function reload($data)
-***REMOVED***
+{
 self::$installed = $data;
 self::$installedByVendor = array();
-***REMOVED***
+}
 
 
 
 
 private static function getInstalled()
-***REMOVED***
-if (null === self::$canGetVendors) ***REMOVED***
+{
+if (null === self::$canGetVendors) {
 self::$canGetVendors = method_exists('Composer\Autoload\ClassLoader', 'getRegisteredLoaders');
-***REMOVED***
+}
 
 $installed = array();
 
-if (self::$canGetVendors) ***REMOVED***
+if (self::$canGetVendors) {
 
- foreach (ClassLoader::getRegisteredLoaders() as $vendorDir => $loader) ***REMOVED***
-if (isset(self::$installedByVendor[$vendorDir])) ***REMOVED***
+ foreach (ClassLoader::getRegisteredLoaders() as $vendorDir => $loader) {
+if (isset(self::$installedByVendor[$vendorDir])) {
 $installed[] = self::$installedByVendor[$vendorDir];
-***REMOVED*** elseif (is_file($vendorDir.'/composer/installed.php')) ***REMOVED***
+} elseif (is_file($vendorDir.'/composer/installed.php')) {
 $installed[] = self::$installedByVendor[$vendorDir] = require $vendorDir.'/composer/installed.php';
-***REMOVED***
-***REMOVED***
-***REMOVED***
+}
+}
+}
 
 $installed[] = self::$installed;
 
 return $installed;
-***REMOVED***
-***REMOVED***
+}
+}

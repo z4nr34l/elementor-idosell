@@ -1,8 +1,8 @@
-***REMOVED***
+<?php
 
 if ( !class_exists('Puc_v4p11_Vcs_ThemeUpdateChecker', false) ):
 
-	class Puc_v4p11_Vcs_ThemeUpdateChecker extends Puc_v4p11_Theme_UpdateChecker implements Puc_v4p11_Vcs_BaseChecker ***REMOVED***
+	class Puc_v4p11_Vcs_ThemeUpdateChecker extends Puc_v4p11_Theme_UpdateChecker implements Puc_v4p11_Vcs_BaseChecker {
 		/**
 		 * @var string The branch where to look for updates. Defaults to "master".
 		 */
@@ -22,16 +22,16 @@ if ( !class_exists('Puc_v4p11_Vcs_ThemeUpdateChecker', false) ):
 		 * @param int $checkPeriod
 		 * @param string $optionName
 		 */
-		public function __construct($api, $stylesheet = null, $customSlug = null, $checkPeriod = 12, $optionName = '') ***REMOVED***
+		public function __construct($api, $stylesheet = null, $customSlug = null, $checkPeriod = 12, $optionName = '') {
 			$this->api = $api;
 			$this->api->setHttpFilterName($this->getUniqueName('request_update_options'));
 
 			parent::__construct($api->getRepositoryUrl(), $stylesheet, $customSlug, $checkPeriod, $optionName);
 
 			$this->api->setSlug($this->slug);
-***REMOVED***
+		}
 
-		public function requestUpdate() ***REMOVED***
+		public function requestUpdate() {
 			$api = $this->api;
 			$api->setLocalDirectory($this->package->getAbsoluteDirectoryPath());
 
@@ -40,10 +40,10 @@ if ( !class_exists('Puc_v4p11_Vcs_ThemeUpdateChecker', false) ):
 
 			//Figure out which reference (tag or branch) we'll use to get the latest version of the theme.
 			$updateSource = $api->chooseReference($this->branch);
-			if ( $updateSource ) ***REMOVED***
+			if ( $updateSource ) {
 				$ref = $updateSource->name;
 				$update->download_url = $updateSource->downloadUrl;
-	***REMOVED*** else ***REMOVED***
+			} else {
 				do_action(
 					'puc_api_error',
 					new WP_Error(
@@ -53,9 +53,9 @@ if ( !class_exists('Puc_v4p11_Vcs_ThemeUpdateChecker', false) ):
 						. 'to the repository or it\'s configured incorrectly.'
 					),
 					null, null, $this->slug
-	***REMOVED***
+				);
 				$ref = $this->branch;
-	***REMOVED***
+			}
 
 			//Get headers from the main stylesheet in this branch/tag. Its "Version" header and other metadata
 			//are what the WordPress install will actually see after upgrading, so they take precedence over releases/tags.
@@ -72,47 +72,47 @@ if ( !class_exists('Puc_v4p11_Vcs_ThemeUpdateChecker', false) ):
 				$this->metadataUrl,
 			));
 
-			if ( empty($update->version) ) ***REMOVED***
+			if ( empty($update->version) ) {
 				//It looks like we didn't find a valid update after all.
 				$update = null;
-	***REMOVED***
+			}
 
 			$update = $this->filterUpdateResult($update);
 			return $update;
-***REMOVED***
+		}
 
 		//FIXME: This is duplicated code. Both theme and plugin subclasses that use VCS share these methods.
 
-		public function setBranch($branch) ***REMOVED***
+		public function setBranch($branch) {
 			$this->branch = $branch;
 			return $this;
-***REMOVED***
+		}
 
-		public function setAuthentication($credentials) ***REMOVED***
+		public function setAuthentication($credentials) {
 			$this->api->setAuthentication($credentials);
 			return $this;
-***REMOVED***
+		}
 
-		public function getVcsApi() ***REMOVED***
+		public function getVcsApi() {
 			return $this->api;
-***REMOVED***
+		}
 
-		public function getUpdate() ***REMOVED***
+		public function getUpdate() {
 			$update = parent::getUpdate();
 
-			if ( isset($update) && !empty($update->download_url) ) ***REMOVED***
+			if ( isset($update) && !empty($update->download_url) ) {
 				$update->download_url = $this->api->signDownloadUrl($update->download_url);
-	***REMOVED***
+			}
 
 			return $update;
-***REMOVED***
+		}
 
-		public function onDisplayConfiguration($panel) ***REMOVED***
+		public function onDisplayConfiguration($panel) {
 			parent::onDisplayConfiguration($panel);
 			$panel->row('Branch', $this->branch);
 			$panel->row('Authentication enabled', $this->api->isAuthenticationEnabled() ? 'Yes' : 'No');
 			$panel->row('API client', get_class($this->api));
-***REMOVED***
-***REMOVED***
+		}
+	}
 
 endif;

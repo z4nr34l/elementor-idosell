@@ -1,7 +1,7 @@
-***REMOVED***
+<?php
 if ( !class_exists('Puc_v4p11_Vcs_Api') ):
 
-	abstract class Puc_v4p11_Vcs_Api ***REMOVED***
+	abstract class Puc_v4p11_Vcs_Api {
 		protected $tagNameProperty = 'name';
 		protected $slug = '';
 
@@ -32,17 +32,17 @@ if ( !class_exists('Puc_v4p11_Vcs_Api') ):
 		 * @param string $repositoryUrl
 		 * @param array|string|null $credentials
 		 */
-		public function __construct($repositoryUrl, $credentials = null) ***REMOVED***
+		public function __construct($repositoryUrl, $credentials = null) {
 			$this->repositoryUrl = $repositoryUrl;
 			$this->setAuthentication($credentials);
-***REMOVED***
+		}
 
 		/**
 		 * @return string
 		 */
-		public function getRepositoryUrl() ***REMOVED***
+		public function getRepositoryUrl() {
 			return $this->repositoryUrl;
-***REMOVED***
+		}
 
 		/**
 		 * Figure out which reference (i.e tag or branch) contains the latest version.
@@ -59,15 +59,15 @@ if ( !class_exists('Puc_v4p11_Vcs_Api') ):
 		 * @param string $ref Tag or branch name.
 		 * @return array Parsed readme.
 		 */
-		public function getRemoteReadme($ref = 'master') ***REMOVED***
+		public function getRemoteReadme($ref = 'master') {
 			$fileContents = $this->getRemoteFile($this->getLocalReadmeName(), $ref);
-			if ( empty($fileContents) ) ***REMOVED***
+			if ( empty($fileContents) ) {
 				return array();
-	***REMOVED***
+			}
 
 			$parser = new PucReadmeParser();
 			return $parser->parse_readme_contents($fileContents);
-***REMOVED***
+		}
 
 		/**
 		 * Get the case-sensitive name of the local readme.txt file.
@@ -80,26 +80,26 @@ if ( !class_exists('Puc_v4p11_Vcs_Api') ):
 		 *
 		 * @return string
 		 */
-		public function getLocalReadmeName() ***REMOVED***
+		public function getLocalReadmeName() {
 			static $fileName = null;
-			if ( $fileName !== null ) ***REMOVED***
+			if ( $fileName !== null ) {
 				return $fileName;
-	***REMOVED***
+			}
 
 			$fileName = 'readme.txt';
-			if ( isset($this->localDirectory) ) ***REMOVED***
+			if ( isset($this->localDirectory) ) {
 				$files = scandir($this->localDirectory);
-				if ( !empty($files) ) ***REMOVED***
-					foreach ($files as $possibleFileName) ***REMOVED***
-						if ( strcasecmp($possibleFileName, 'readme.txt') === 0 ) ***REMOVED***
+				if ( !empty($files) ) {
+					foreach ($files as $possibleFileName) {
+						if ( strcasecmp($possibleFileName, 'readme.txt') === 0 ) {
 							$fileName = $possibleFileName;
 							break;
-				***REMOVED***
-			***REMOVED***
-		***REMOVED***
-	***REMOVED***
+						}
+					}
+				}
+			}
 			return $fileName;
-***REMOVED***
+		}
 
 		/**
 		 * Get a branch.
@@ -131,18 +131,18 @@ if ( !class_exists('Puc_v4p11_Vcs_Api') ):
 		 * @param string $name
 		 * @return bool
 		 */
-		protected function looksLikeVersion($name) ***REMOVED***
+		protected function looksLikeVersion($name) {
 			//Tag names may be prefixed with "v", e.g. "v1.2.3".
 			$name = ltrim($name, 'v');
 
 			//The version string must start with a number.
-			if ( !is_numeric(substr($name, 0, 1)) ) ***REMOVED***
+			if ( !is_numeric(substr($name, 0, 1)) ) {
 				return false;
-	***REMOVED***
+			}
 
 			//The goal is to accept any SemVer-compatible or "PHP-standardized" version number.
-			return (preg_match('@^(\d***REMOVED***1,5***REMOVED***?)(\.\d***REMOVED***1,10***REMOVED***?)***REMOVED***0,4***REMOVED***?($|[abrdp+_\-]|\s)@i', $name) === 1);
-***REMOVED***
+			return (preg_match('@^(\d{1,5}?)(\.\d{1,10}?){0,4}?($|[abrdp+_\-]|\s)@i', $name) === 1);
+		}
 
 		/**
 		 * Check if a tag appears to be named like a version number.
@@ -150,10 +150,10 @@ if ( !class_exists('Puc_v4p11_Vcs_Api') ):
 		 * @param stdClass $tag
 		 * @return bool
 		 */
-		protected function isVersionTag($tag) ***REMOVED***
+		protected function isVersionTag($tag) {
 			$property = $this->tagNameProperty;
 			return isset($tag->$property) && $this->looksLikeVersion($tag->$property);
-***REMOVED***
+		}
 
 		/**
 		 * Sort a list of tags as if they were version numbers.
@@ -162,14 +162,14 @@ if ( !class_exists('Puc_v4p11_Vcs_Api') ):
 		 * @param stdClass[] $tags Array of tag objects.
 		 * @return stdClass[] Filtered array of tags sorted in descending order.
 		 */
-		protected function sortTagsByVersion($tags) ***REMOVED***
+		protected function sortTagsByVersion($tags) {
 			//Keep only those tags that look like version numbers.
 			$versionTags = array_filter($tags, array($this, 'isVersionTag'));
 			//Sort them in descending order.
 			usort($versionTags, array($this, 'compareTagNames'));
 
 			return $versionTags;
-***REMOVED***
+		}
 
 		/**
 		 * Compare two tags as if they were version number.
@@ -178,16 +178,16 @@ if ( !class_exists('Puc_v4p11_Vcs_Api') ):
 		 * @param stdClass $tag2 Another tag object.
 		 * @return int
 		 */
-		protected function compareTagNames($tag1, $tag2) ***REMOVED***
+		protected function compareTagNames($tag1, $tag2) {
 			$property = $this->tagNameProperty;
-			if ( !isset($tag1->$property) ) ***REMOVED***
+			if ( !isset($tag1->$property) ) {
 				return 1;
-	***REMOVED***
-			if ( !isset($tag2->$property) ) ***REMOVED***
+			}
+			if ( !isset($tag2->$property) ) {
 				return -1;
-	***REMOVED***
+			}
 			return -version_compare(ltrim($tag1->$property, 'v'), ltrim($tag2->$property, 'v'));
-***REMOVED***
+		}
 
 		/**
 		 * Get the contents of a file from a specific branch or tag.
@@ -213,20 +213,20 @@ if ( !class_exists('Puc_v4p11_Vcs_Api') ):
 		 * @param string $localDirectory Full path to the local plugin or theme directory.
 		 * @return null|string The HTML contents of the changelog.
 		 */
-		public function getRemoteChangelog($ref, $localDirectory) ***REMOVED***
+		public function getRemoteChangelog($ref, $localDirectory) {
 			$filename = $this->findChangelogName($localDirectory);
-			if ( empty($filename) ) ***REMOVED***
+			if ( empty($filename) ) {
 				return null;
-	***REMOVED***
+			}
 
 			$changelog = $this->getRemoteFile($filename, $ref);
-			if ( $changelog === null ) ***REMOVED***
+			if ( $changelog === null ) {
 				return null;
-	***REMOVED***
+			}
 
 			/** @noinspection PhpUndefinedClassInspection */
 			return Parsedown::instance()->text($changelog);
-***REMOVED***
+		}
 
 		/**
 		 * Guess the name of the changelog file.
@@ -234,69 +234,69 @@ if ( !class_exists('Puc_v4p11_Vcs_Api') ):
 		 * @param string $directory
 		 * @return string|null
 		 */
-		protected function findChangelogName($directory = null) ***REMOVED***
-			if ( !isset($directory) ) ***REMOVED***
+		protected function findChangelogName($directory = null) {
+			if ( !isset($directory) ) {
 				$directory = $this->localDirectory;
-	***REMOVED***
-			if ( empty($directory) || !is_dir($directory) || ($directory === '.') ) ***REMOVED***
+			}
+			if ( empty($directory) || !is_dir($directory) || ($directory === '.') ) {
 				return null;
-	***REMOVED***
+			}
 
 			$possibleNames = array('CHANGES.md', 'CHANGELOG.md', 'changes.md', 'changelog.md');
 			$files = scandir($directory);
 			$foundNames = array_intersect($possibleNames, $files);
 
-			if ( !empty($foundNames) ) ***REMOVED***
+			if ( !empty($foundNames) ) {
 				return reset($foundNames);
-	***REMOVED***
+			}
 			return null;
-***REMOVED***
+		}
 
 		/**
 		 * Set authentication credentials.
 		 *
 		 * @param $credentials
 		 */
-		public function setAuthentication($credentials) ***REMOVED***
+		public function setAuthentication($credentials) {
 			$this->credentials = $credentials;
-***REMOVED***
+		}
 
-		public function isAuthenticationEnabled() ***REMOVED***
+		public function isAuthenticationEnabled() {
 			return !empty($this->credentials);
-***REMOVED***
+		}
 
 		/**
 		 * @param string $url
 		 * @return string
 		 */
-		public function signDownloadUrl($url) ***REMOVED***
+		public function signDownloadUrl($url) {
 			return $url;
-***REMOVED***
+		}
 
 		/**
 		 * @param string $filterName
 		 */
-		public function setHttpFilterName($filterName) ***REMOVED***
+		public function setHttpFilterName($filterName) {
 			$this->httpFilterName = $filterName;
-***REMOVED***
+		}
 
 		/**
 		 * @param string $directory
 		 */
-		public function setLocalDirectory($directory) ***REMOVED***
-			if ( empty($directory) || !is_dir($directory) || ($directory === '.') ) ***REMOVED***
+		public function setLocalDirectory($directory) {
+			if ( empty($directory) || !is_dir($directory) || ($directory === '.') ) {
 				$this->localDirectory = null;
-	***REMOVED*** else ***REMOVED***
+			} else {
 				$this->localDirectory = $directory;
-	***REMOVED***
-***REMOVED***
+			}
+		}
 
 		/**
 		 * @param string $slug
 		 */
-		public function setSlug($slug) ***REMOVED***
+		public function setSlug($slug) {
 			$this->slug = $slug;
-***REMOVED***
-***REMOVED***
+		}
+	}
 
 endif;

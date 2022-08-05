@@ -1,7 +1,7 @@
-***REMOVED***
+<?php
 if ( !class_exists('Puc_v4p11_Plugin_Package', false) ):
 
-	class Puc_v4p11_Plugin_Package extends Puc_v4p11_InstalledPackage ***REMOVED***
+	class Puc_v4p11_Plugin_Package extends Puc_v4p11_InstalledPackage {
 		/**
 		 * @var Puc_v4p11_Plugin_UpdateChecker
 		 */
@@ -22,7 +22,7 @@ if ( !class_exists('Puc_v4p11_Plugin_Package', false) ):
 		 */
 		private $cachedInstalledVersion = null;
 
-		public function __construct($pluginAbsolutePath, $updateChecker) ***REMOVED***
+		public function __construct($pluginAbsolutePath, $updateChecker) {
 			$this->pluginAbsolutePath = $pluginAbsolutePath;
 			$this->pluginFile = plugin_basename($this->pluginAbsolutePath);
 
@@ -31,18 +31,18 @@ if ( !class_exists('Puc_v4p11_Plugin_Package', false) ):
 			//Clear the version number cache when something - anything - is upgraded or WP clears the update cache.
 			add_filter('upgrader_post_install', array($this, 'clearCachedVersion'));
 			add_action('delete_site_transient_update_plugins', array($this, 'clearCachedVersion'));
-***REMOVED***
+		}
 
-		public function getInstalledVersion() ***REMOVED***
-			if ( isset($this->cachedInstalledVersion) ) ***REMOVED***
+		public function getInstalledVersion() {
+			if ( isset($this->cachedInstalledVersion) ) {
 				return $this->cachedInstalledVersion;
-	***REMOVED***
+			}
 
 			$pluginHeader = $this->getPluginHeader();
-			if ( isset($pluginHeader['Version']) ) ***REMOVED***
+			if ( isset($pluginHeader['Version']) ) {
 				$this->cachedInstalledVersion = $pluginHeader['Version'];
 				return $pluginHeader['Version'];
-	***REMOVED*** else ***REMOVED***
+			} else {
 				//This can happen if the filename points to something that is not a plugin.
 				$this->updateChecker->triggerError(
 					sprintf(
@@ -50,10 +50,10 @@ if ( !class_exists('Puc_v4p11_Plugin_Package', false) ):
 						$this->updateChecker->pluginFile
 					),
 					E_USER_WARNING
-	***REMOVED***
+				);
 				return null;
-	***REMOVED***
-***REMOVED***
+			}
+		}
 
 		/**
 		 * Clear the cached plugin version. This method can be set up as a filter (hook) and will
@@ -62,14 +62,14 @@ if ( !class_exists('Puc_v4p11_Plugin_Package', false) ):
 		 * @param mixed $filterArgument
 		 * @return mixed
 		 */
-		public function clearCachedVersion($filterArgument = null) ***REMOVED***
+		public function clearCachedVersion($filterArgument = null) {
 			$this->cachedInstalledVersion = null;
 			return $filterArgument;
-***REMOVED***
+		}
 
-		public function getAbsoluteDirectoryPath() ***REMOVED***
+		public function getAbsoluteDirectoryPath() {
 			return dirname($this->pluginAbsolutePath);
-***REMOVED***
+		}
 
 		/**
 		 * Get the value of a specific plugin or theme header.
@@ -78,15 +78,15 @@ if ( !class_exists('Puc_v4p11_Plugin_Package', false) ):
 		 * @param string $defaultValue
 		 * @return string Either the value of the header, or $defaultValue if the header doesn't exist or is empty.
 		 */
-		public function getHeaderValue($headerName, $defaultValue = '') ***REMOVED***
+		public function getHeaderValue($headerName, $defaultValue = '') {
 			$headers = $this->getPluginHeader();
-			if ( isset($headers[$headerName]) && ($headers[$headerName] !== '') ) ***REMOVED***
+			if ( isset($headers[$headerName]) && ($headers[$headerName] !== '') ) {
 				return $headers[$headerName];
-	***REMOVED***
+			}
 			return $defaultValue;
-***REMOVED***
+		}
 
-		protected function getHeaderNames() ***REMOVED***
+		protected function getHeaderNames() {
 			return array(
 				'Name'              => 'Plugin Name',
 				'PluginURI'         => 'Plugin URI',
@@ -104,30 +104,30 @@ if ( !class_exists('Puc_v4p11_Plugin_Package', false) ):
 				'Requires WP'       => 'Requires WP',
 				'Tested up to'      => 'Tested up to',
 				'Requires at least' => 'Requires at least',
-***REMOVED***
-***REMOVED***
+			);
+		}
 
 		/**
 		 * Get the translated plugin title.
 		 *
 		 * @return string
 		 */
-		public function getPluginTitle() ***REMOVED***
+		public function getPluginTitle() {
 			$title = '';
 			$header = $this->getPluginHeader();
-			if ( $header && !empty($header['Name']) && isset($header['TextDomain']) ) ***REMOVED***
+			if ( $header && !empty($header['Name']) && isset($header['TextDomain']) ) {
 				$title = translate($header['Name'], $header['TextDomain']);
-	***REMOVED***
+			}
 			return $title;
-***REMOVED***
+		}
 
 		/**
 		 * Get plugin's metadata from its file header.
 		 *
 		 * @return array
 		 */
-		public function getPluginHeader() ***REMOVED***
-			if ( !is_file($this->pluginAbsolutePath) ) ***REMOVED***
+		public function getPluginHeader() {
+			if ( !is_file($this->pluginAbsolutePath) ) {
 				//This can happen if the plugin filename is wrong.
 				$this->updateChecker->triggerError(
 					sprintf(
@@ -135,50 +135,50 @@ if ( !class_exists('Puc_v4p11_Plugin_Package', false) ):
 						$this->updateChecker->pluginFile
 					),
 					E_USER_WARNING
-	***REMOVED***
+				);
 				return array();
-	***REMOVED***
+			}
 
-			if ( !function_exists('get_plugin_data') ) ***REMOVED***
+			if ( !function_exists('get_plugin_data') ) {
 				/** @noinspection PhpIncludeInspection */
 				require_once(ABSPATH . '/wp-admin/includes/plugin.php');
-	***REMOVED***
+			}
 			return get_plugin_data($this->pluginAbsolutePath, false, false);
-***REMOVED***
+		}
 
-		public function removeHooks() ***REMOVED***
+		public function removeHooks() {
 			remove_filter('upgrader_post_install', array($this, 'clearCachedVersion'));
 			remove_action('delete_site_transient_update_plugins', array($this, 'clearCachedVersion'));
-***REMOVED***
+		}
 
 		/**
 		 * Check if the plugin file is inside the mu-plugins directory.
 		 *
 		 * @return bool
 		 */
-		public function isMuPlugin() ***REMOVED***
+		public function isMuPlugin() {
 			static $cachedResult = null;
 
-			if ( $cachedResult === null ) ***REMOVED***
-				if ( !defined('WPMU_PLUGIN_DIR') || !is_string(WPMU_PLUGIN_DIR) ) ***REMOVED***
+			if ( $cachedResult === null ) {
+				if ( !defined('WPMU_PLUGIN_DIR') || !is_string(WPMU_PLUGIN_DIR) ) {
 					$cachedResult = false;
 					return $cachedResult;
-		***REMOVED***
+				}
 
 				//Convert both paths to the canonical form before comparison.
 				$muPluginDir = realpath(WPMU_PLUGIN_DIR);
 				$pluginPath  = realpath($this->pluginAbsolutePath);
 				//If realpath() fails, just normalize the syntax instead.
-				if (($muPluginDir === false) || ($pluginPath === false)) ***REMOVED***
+				if (($muPluginDir === false) || ($pluginPath === false)) {
 					$muPluginDir = Puc_v4p11_Factory::normalizePath(WPMU_PLUGIN_DIR);
 					$pluginPath  = Puc_v4p11_Factory::normalizePath($this->pluginAbsolutePath);
-		***REMOVED***
+				}
 
 				$cachedResult = (strpos($pluginPath, $muPluginDir) === 0);
-	***REMOVED***
+			}
 
 			return $cachedResult;
-***REMOVED***
-***REMOVED***
+		}
+	}
 
 endif;

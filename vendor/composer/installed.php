@@ -1,4 +1,4 @@
-***REMOVED*** return array (
+<?php return array (
   'root' => 
   array (
     'pretty_version' => '1.0.0+no-version-set',

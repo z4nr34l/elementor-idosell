@@ -1,18 +1,18 @@
-***REMOVED***
+<?php
 
 if ( !class_exists('Puc_v4p11_OAuthSignature', false) ):
 
 	/**
 	 * A basic signature generator for zero-legged OAuth 1.0.
 	 */
-	class Puc_v4p11_OAuthSignature ***REMOVED***
+	class Puc_v4p11_OAuthSignature {
 		private $consumerKey = '';
 		private $consumerSecret = '';
 
-		public function __construct($consumerKey, $consumerSecret) ***REMOVED***
+		public function __construct($consumerKey, $consumerSecret) {
 			$this->consumerKey = $consumerKey;
 			$this->consumerSecret = $consumerSecret;
-***REMOVED***
+		}
 
 		/**
 		 * Sign a URL using OAuth 1.0.
@@ -21,19 +21,19 @@ if ( !class_exists('Puc_v4p11_OAuthSignature', false) ):
 		 * @param string $method HTTP method such as "GET", "POST" and so on.
 		 * @return string The signed URL.
 		 */
-		public function sign($url, $method = 'GET') ***REMOVED***
+		public function sign($url, $method = 'GET') {
 			$parameters = array();
 
 			//Parse query parameters.
 			$query = parse_url($url, PHP_URL_QUERY);
-			if ( !empty($query) ) ***REMOVED***
+			if ( !empty($query) ) {
 				parse_str($query, $parsedParams);
-				if ( is_array($parameters) ) ***REMOVED***
+				if ( is_array($parameters) ) {
 					$parameters = $parsedParams;
-		***REMOVED***
+				}
 				//Remove the query string from the URL. We'll replace it later.
 				$url = substr($url, 0, strpos($url, '?'));
-	***REMOVED***
+			}
 
 			$parameters = array_merge(
 				$parameters,
@@ -44,7 +44,7 @@ if ( !class_exists('Puc_v4p11_OAuthSignature', false) ):
 					'oauth_timestamp' => time(),
 					'oauth_version' => '1.0',
 				)
-***REMOVED***
+			);
 			unset($parameters['oauth_signature']);
 
 			//Parameters must be sorted alphabetically before signing.
@@ -71,30 +71,30 @@ if ( !class_exists('Puc_v4p11_OAuthSignature', false) ):
 			$parameters['oauth_signature'] = base64_encode(hash_hmac('sha1', $stringToSign, $secret, true));
 
 			return ($url . '?' . http_build_query($parameters));
-***REMOVED***
+		}
 
 		/**
 		 * Generate a random nonce.
 		 *
 		 * @return string
 		 */
-		private function nonce() ***REMOVED***
+		private function nonce() {
 			$mt = microtime();
 
 			$rand = null;
-			if ( is_callable('random_bytes') ) ***REMOVED***
-				try ***REMOVED***
+			if ( is_callable('random_bytes') ) {
+				try {
 					$rand = random_bytes(16);
-		***REMOVED*** catch (Exception $ex) ***REMOVED***
+				} catch (Exception $ex) {
 					//Fall back to mt_rand (below).
-		***REMOVED***
-	***REMOVED***
-			if ( $rand === null ) ***REMOVED***
+				}
+			}
+			if ( $rand === null ) {
 				$rand = mt_rand();
-	***REMOVED***
+			}
 
 			return md5($mt . '_' . $rand);
-***REMOVED***
-***REMOVED***
+		}
+	}
 
 endif;

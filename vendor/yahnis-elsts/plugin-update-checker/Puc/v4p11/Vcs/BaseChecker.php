@@ -1,7 +1,7 @@
-***REMOVED***
+<?php
 if ( !interface_exists('Puc_v4p11_Vcs_BaseChecker', false) ):
 
-	interface Puc_v4p11_Vcs_BaseChecker ***REMOVED***
+	interface Puc_v4p11_Vcs_BaseChecker {
 		/**
 		 * Set the repository branch to use for updates. Defaults to 'master'.
 		 *
@@ -22,6 +22,6 @@ if ( !interface_exists('Puc_v4p11_Vcs_BaseChecker', false) ):
 		 * @return Puc_v4p11_Vcs_Api
 		 */
 		public function getVcsApi();
-***REMOVED***
+	}
 
 endif;

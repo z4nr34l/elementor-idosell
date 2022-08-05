@@ -1,9 +1,9 @@
-.puc-debug-bar-panel-v4 pre ***REMOVED***
+.puc-debug-bar-panel-v4 pre {
 	margin-top: 0;
-***REMOVED***
+}
 
 /* Style the debug data table to match "widefat" table style used by WordPress. */
-table.puc-debug-data ***REMOVED***
+table.puc-debug-data {
     width: 100%;
     clear: both;
     margin: 0;
@@ -14,13 +14,13 @@ table.puc-debug-data ***REMOVED***
     border-radius: 3px;
     border: 1px solid #dfdfdf;
     border-collapse: separate;
-***REMOVED***
+}
 
-table.puc-debug-data * ***REMOVED***
+table.puc-debug-data * {
     word-wrap: break-word;
-***REMOVED***
+}
 
-table.puc-debug-data th ***REMOVED***
+table.puc-debug-data th {
 	width: 11em;
     padding: 7px 7px 8px;
     text-align: left;
@@ -30,9 +30,9 @@ table.puc-debug-data th ***REMOVED***
     font-size: 14px;
     line-height: 1.3em;
     text-shadow: rgba(255, 255, 255, 0.804) 0 1px 0;
-***REMOVED***
+}
 
-table.puc-debug-data td, table.puc-debug-data th ***REMOVED***
+table.puc-debug-data td, table.puc-debug-data th {
     border-width: 1px 0;
     border-style: solid;
 
@@ -40,31 +40,31 @@ table.puc-debug-data td, table.puc-debug-data th ***REMOVED***
     border-bottom-color: #dfdfdf;
 
     text-transform: none;
-***REMOVED***
+}
 
-table.puc-debug-data td ***REMOVED***
+table.puc-debug-data td {
     color: #555;
     font-size: 12px;
     padding: 4px 7px 2px;
     vertical-align: top;
-***REMOVED***
+}
 
-.puc-ajax-response ***REMOVED***
+.puc-ajax-response {
 	border: 1px solid #dfdfdf;
 	border-radius: 3px;
 	padding: 0.5em;
 	margin: 5px 0;
 	background-color: white;
-***REMOVED***
+}
 
-.puc-ajax-nonce ***REMOVED***
+.puc-ajax-nonce {
 	display: none;
-***REMOVED***
+}
 
-.puc-ajax-response dt ***REMOVED***
+.puc-ajax-response dt {
 	margin: 0;
-***REMOVED***
+}
 
-.puc-ajax-response dd ***REMOVED***
+.puc-ajax-response dd {
 	margin: 0 0 1em;
-***REMOVED***
+}

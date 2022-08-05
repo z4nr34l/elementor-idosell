@@ -1,8 +1,8 @@
-***REMOVED***
+<?php
 
 if ( !class_exists('Puc_v4p11_Utils', false) ):
 
-	class Puc_v4p11_Utils ***REMOVED***
+	class Puc_v4p11_Utils {
 		/**
 		 * Get a value from a nested array or object based on a path.
 		 *
@@ -12,25 +12,25 @@ if ( !class_exists('Puc_v4p11_Utils', false) ):
 		 * @param string $separator Path element separator. Only applies to string paths.
 		 * @return mixed
 		 */
-		public static function get($collection, $path, $default = null, $separator = '.') ***REMOVED***
-			if ( is_string($path) ) ***REMOVED***
+		public static function get($collection, $path, $default = null, $separator = '.') {
+			if ( is_string($path) ) {
 				$path = explode($separator, $path);
-	***REMOVED***
+			}
 
 			//Follow the $path into $input as far as possible.
 			$currentValue = $collection;
-			foreach ($path as $node) ***REMOVED***
-				if ( is_array($currentValue) && isset($currentValue[$node]) ) ***REMOVED***
+			foreach ($path as $node) {
+				if ( is_array($currentValue) && isset($currentValue[$node]) ) {
 					$currentValue = $currentValue[$node];
-		***REMOVED*** else if ( is_object($currentValue) && isset($currentValue->$node) ) ***REMOVED***
+				} else if ( is_object($currentValue) && isset($currentValue->$node) ) {
 					$currentValue = $currentValue->$node;
-		***REMOVED*** else ***REMOVED***
+				} else {
 					return $default;
-		***REMOVED***
-	***REMOVED***
+				}
+			}
 
 			return $currentValue;
-***REMOVED***
+		}
 
 		/**
 		 * Get the first array element that is not empty.
@@ -39,19 +39,19 @@ if ( !class_exists('Puc_v4p11_Utils', false) ):
 		 * @param mixed|null $default Returns this value if there are no non-empty elements.
 		 * @return mixed|null
 		 */
-		public static function findNotEmpty($values, $default = null) ***REMOVED***
-			if ( empty($values) ) ***REMOVED***
+		public static function findNotEmpty($values, $default = null) {
+			if ( empty($values) ) {
 				return $default;
-	***REMOVED***
+			}
 
-			foreach ($values as $value) ***REMOVED***
-				if ( !empty($value) ) ***REMOVED***
+			foreach ($values as $value) {
+				if ( !empty($value) ) {
 					return $value;
-		***REMOVED***
-	***REMOVED***
+				}
+			}
 
 			return $default;
-***REMOVED***
+		}
 
 		/**
 		 * Check if the input string starts with the specified prefix.
@@ -60,10 +60,10 @@ if ( !class_exists('Puc_v4p11_Utils', false) ):
 		 * @param string $prefix
 		 * @return bool
 		 */
-		public static function startsWith($input, $prefix) ***REMOVED***
+		public static function startsWith($input, $prefix) {
 			$length = strlen($prefix);
 			return (substr($input, 0, $length) === $prefix);
-***REMOVED***
-***REMOVED***
+		}
+	}
 
 endif;

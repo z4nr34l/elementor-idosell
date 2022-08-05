@@ -1,4 +1,4 @@
-***REMOVED***
+<?php
 if ( !class_exists('Puc_v4p11_Metadata', false) ):
 
 	/**
@@ -8,7 +8,7 @@ if ( !class_exists('Puc_v4p11_Metadata', false) ):
 	 * @copyright 2016
 	 * @access public
 	 */
-	abstract class Puc_v4p11_Metadata ***REMOVED***
+	abstract class Puc_v4p11_Metadata {
 
 		/**
 		 * Create an instance of this class from a JSON document.
@@ -17,38 +17,38 @@ if ( !class_exists('Puc_v4p11_Metadata', false) ):
 		 * @param string $json
 		 * @return self
 		 */
-		public static function fromJson(/** @noinspection PhpUnusedParameterInspection */ $json) ***REMOVED***
+		public static function fromJson(/** @noinspection PhpUnusedParameterInspection */ $json) {
 			throw new LogicException('The ' . __METHOD__ . ' method must be implemented by subclasses');
-***REMOVED***
+		}
 
 		/**
 		 * @param string $json
 		 * @param self $target
 		 * @return bool
 		 */
-		protected static function createFromJson($json, $target) ***REMOVED***
+		protected static function createFromJson($json, $target) {
 			/** @var StdClass $apiResponse */
 			$apiResponse = json_decode($json);
-			if ( empty($apiResponse) || !is_object($apiResponse) )***REMOVED***
+			if ( empty($apiResponse) || !is_object($apiResponse) ){
 				$errorMessage = "Failed to parse update metadata. Try validating your .json file with http://jsonlint.com/";
 				do_action('puc_api_error', new WP_Error('puc-invalid-json', $errorMessage));
 				trigger_error($errorMessage, E_USER_NOTICE);
 				return false;
-	***REMOVED***
+			}
 
 			$valid = $target->validateMetadata($apiResponse);
-			if ( is_wp_error($valid) )***REMOVED***
+			if ( is_wp_error($valid) ){
 				do_action('puc_api_error', $valid);
 				trigger_error($valid->get_error_message(), E_USER_NOTICE);
 				return false;
-	***REMOVED***
+			}
 
-			foreach(get_object_vars($apiResponse) as $key => $value)***REMOVED***
+			foreach(get_object_vars($apiResponse) as $key => $value){
 				$target->$key = $value;
-	***REMOVED***
+			}
 
 			return true;
-***REMOVED***
+		}
 
 		/**
 		 * No validation by default! Subclasses should check that the required fields are present.
@@ -56,9 +56,9 @@ if ( !class_exists('Puc_v4p11_Metadata', false) ):
 		 * @param StdClass $apiResponse
 		 * @return bool|WP_Error
 		 */
-		protected function validateMetadata(/** @noinspection PhpUnusedParameterInspection */ $apiResponse) ***REMOVED***
+		protected function validateMetadata(/** @noinspection PhpUnusedParameterInspection */ $apiResponse) {
 			return true;
-***REMOVED***
+		}
 
 		/**
 		 * Create a new instance by copying the necessary fields from another object.
@@ -67,9 +67,9 @@ if ( !class_exists('Puc_v4p11_Metadata', false) ):
 		 * @param StdClass|self $object The source object.
 		 * @return self The new copy.
 		 */
-		public static function fromObject(/** @noinspection PhpUnusedParameterInspection */ $object) ***REMOVED***
+		public static function fromObject(/** @noinspection PhpUnusedParameterInspection */ $object) {
 			throw new LogicException('The ' . __METHOD__ . ' method must be implemented by subclasses');
-***REMOVED***
+		}
 
 		/**
 		 * Create an instance of StdClass that can later be converted back to an
@@ -79,11 +79,11 @@ if ( !class_exists('Puc_v4p11_Metadata', false) ):
 		 *
 		 * @return StdClass
 		 */
-		public function toStdClass() ***REMOVED***
+		public function toStdClass() {
 			$object = new stdClass();
 			$this->copyFields($this, $object);
 			return $object;
-***REMOVED***
+		}
 
 		/**
 		 * Transform the metadata into the format used by WordPress core.
@@ -98,35 +98,35 @@ if ( !class_exists('Puc_v4p11_Metadata', false) ):
 		 * @param StdClass|self $from
 		 * @param StdClass|self $to
 		 */
-		protected function copyFields($from, $to) ***REMOVED***
+		protected function copyFields($from, $to) {
 			$fields = $this->getFieldNames();
 
-			if ( property_exists($from, 'slug') && !empty($from->slug) ) ***REMOVED***
+			if ( property_exists($from, 'slug') && !empty($from->slug) ) {
 				//Let plugins add extra fields without having to create subclasses.
 				$fields = apply_filters($this->getPrefixedFilter('retain_fields') . '-' . $from->slug, $fields);
-	***REMOVED***
+			}
 
-			foreach ($fields as $field) ***REMOVED***
-				if ( property_exists($from, $field) ) ***REMOVED***
+			foreach ($fields as $field) {
+				if ( property_exists($from, $field) ) {
 					$to->$field = $from->$field;
-		***REMOVED***
-	***REMOVED***
-***REMOVED***
+				}
+			}
+		}
 
 		/**
 		 * @return string[]
 		 */
-		protected function getFieldNames() ***REMOVED***
+		protected function getFieldNames() {
 			return array();
-***REMOVED***
+		}
 
 		/**
 		 * @param string $tag
 		 * @return string
 		 */
-		protected function getPrefixedFilter($tag) ***REMOVED***
+		protected function getPrefixedFilter($tag) {
 			return 'puc_' . $tag;
-***REMOVED***
-***REMOVED***
+		}
+	}
 
 endif;

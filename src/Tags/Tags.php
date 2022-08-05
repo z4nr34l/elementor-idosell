@@ -1,14 +1,14 @@
-***REMOVED***
+<?php
 
 namespace ElementorIdosell\Tags;
 
-if ( ! defined( 'ABSPATH' ) ) ***REMOVED***
+if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
-***REMOVED***
+}
 
-class Tags ***REMOVED***
+class Tags {
 
-	function register_new_dynamic_tag_group( $dynamic_tags_manager ) ***REMOVED***
+	function register_new_dynamic_tag_group( $dynamic_tags_manager ) {
 
 		$dynamic_tags_manager->register_group(
 			'idosell',
@@ -17,15 +17,15 @@ class Tags ***REMOVED***
 			]
 		);
 
-***REMOVED***
+	}
 
-	function register_dynamic_tags( $dynamic_tags_manager ) ***REMOVED***
+	function register_dynamic_tags( $dynamic_tags_manager ) {
 		$dynamic_tags_manager->register( new RetailPrice );
-***REMOVED***
+	}
 
-***REMOVED*** ***REMOVED***
+	public function __construct() {
 		add_action( 'elementor/dynamic_tags/register', [$this, 'register_new_dynamic_tag_group'] );
 		add_action( 'elementor/dynamic_tags/register', [$this, 'register_dynamic_tags'] );
-***REMOVED***
+	}
 
-***REMOVED***
+}
