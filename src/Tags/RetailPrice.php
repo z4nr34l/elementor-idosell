@@ -102,16 +102,20 @@ class RetailPrice extends \Elementor\Core\DynamicTags\Tag {
   }
 
 	protected function getData($input) {
-    if(isset($input) && $input !== "") {
-      return $this->getDbData($input);
-    } else {
-      $acf_field = get_field('product_in');
-      if(isset($acf_field) && $acf_field !== "") {
-	      return $this->getDbData($acf_field);
-      } else {
-	      return null;
-      }
-    }
+        if(isset($input) && $input !== "") {
+          return $this->getDbData($input);
+        } else {
+            if(function_exists('get_field')) {
+                $acf_field = get_field('product_in');
+                if(isset($acf_field) && $acf_field !== "") {
+                    return $this->getDbData($acf_field);
+                } else {
+                    return null;
+                }
+            } else {
+                return null;
+            }
+        }
 	}
 
 	/**
