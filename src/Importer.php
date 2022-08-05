@@ -7,11 +7,6 @@ use Exception;
 class Importer
 {
 
-	/**
-	 * http://rcpro.iai-shop.com/api/?gate=products/get/170/json
-	 * MktAPI
-	 * j6#wNlqhN&BB6llW@4PQ
-	 */
 	private $options;
 	public string $table_name = "idosell_products";
 
@@ -21,7 +16,11 @@ class Importer
 
 		$this->options = get_option('idosell');
 
-		$sql = "CREATE TABLE IF NOT EXISTS `" . $wpdb->prefix.$this->table_name . "` (
+		if(isset($_GET['idosell_import'])){
+            $sql = "DROP TABLE `" . $wpdb->prefix.$this->table_name . "`;" ;
+            $wpdb->query($sql);
+
+            $sql = "CREATE TABLE `" . $wpdb->prefix.$this->table_name . "` (
                             `id` int(10) NOT NULL,
                             `code_producer` VARCHAR(25) NULL,
                             `product_sizecode` VARCHAR(25) NULL,
@@ -29,9 +28,8 @@ class Importer
                             `price` VARCHAR(45) NULL,
                             PRIMARY KEY (`id`)
                             );" ;
-		$wpdb->query($sql);
+            $wpdb->query($sql);
 
-		if(isset($_GET['idosell_import'])){
 			add_action( 'wp_loaded', [$this, 'import'] );
 		}
 
@@ -108,7 +106,7 @@ class Importer
 				$upsert = $wpdb->prepare($sql, $product['productId'], $product['productSizesAttributes'][0]['productSizeCodeExternal'] ?: "", $product['productSizesAttributes'][0]['productSizeCodeProducer'] ?: "", $product['productDisplayedCode'] ?: "", $product['productRetailPrice'] ?: null, $product['productRetailPrice'] ?: null);
 				$wpdb->query($upsert);
 			}
-			
+
 			for ($i = 1; $i <= $data['resultsNumberPage']; $i++) {
 				$async_urls[] = admin_url()."/options-general.php?page=idosell&idosell_async_import=1&idosell_async_page=" . $i;
 			}
