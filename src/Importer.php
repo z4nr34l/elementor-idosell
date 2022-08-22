@@ -190,9 +190,13 @@ class Importer
 			$collection = simplexml_load_string( wp_remote_retrieve_body( $response ) );
 
 			foreach ( $collection->products->product as $product ) {
-				$sql           = "INSERT INTO " . $wpdb->prefix . $this->table_name . " (id, price) VALUES (%d, %f) ON DUPLICATE KEY UPDATE price = %f";
-				$upsert        = $wpdb->prepare( $sql, get_object_vars( $product )['@attributes']['id'], get_object_vars( $product->srp )['@attributes']['gross'] ?: null, get_object_vars( $product->srp )['@attributes']['gross'] ?: null );
-				$rows_affected = $wpdb->query( $upsert );
+				$attributes = get_object_vars( $product )['@attributes'];
+				$srp_attributes = get_object_vars( $product->srp )['@attributes'];
+				if (isset($srp_attributes['gross']) && !empty($srp_attributes['gross'])) {
+					$sql           = "INSERT INTO " . $wpdb->prefix . $this->table_name . " (id, price) VALUES (%d, %f) ON DUPLICATE KEY UPDATE price = %f";
+					$upsert        = $wpdb->prepare( $sql, $attributes['id'], $srp_attributes['gross'], $srp_attributes['gross'] );
+					$rows_affected = $wpdb->query( $upsert );
+				}
 			}
 		} else {
 			throw new Exception( 'Request failed. XML URL not set in settings.' );
