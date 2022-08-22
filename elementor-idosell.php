@@ -3,7 +3,7 @@
 /*
 Plugin Name: Elementor Idosell
 Description: Elementor integration for Idosell
-Version: 2022.0.13
+Version: 2022.0.14-release
 Author: Mateusz "Z4NR34L" Janota
 Author URI: https://www.zanreal.pl
 */
