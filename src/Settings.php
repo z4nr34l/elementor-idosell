@@ -145,23 +145,23 @@ class Settings
   }
 	public function gatewayUrlCallback(): void
 	{
-		printf(
-			'<input class="regular-text" type="text" name="idosell[gateway_url]" id="idosell_gateway_url" value="%s">',
-			isset($this->options['gateway_url']) ? esc_attr($this->options['gateway_url']) : ''
-		);
+        printf(
+            '<input class="regular-text" type="text" name="idosell[gateway_url]" id="idosell_gateway_url" value="%s">',
+            isset($this->options['gateway_url']) ? esc_attr($this->options['gateway_url']) : ''
+        );
 	}
 	public function loginCallback(): void
 	{
-		printf(
-			'<input class="regular-text" type="text" name="idosell[login]" id="idosell_login" value="%s">',
-			isset($this->options['login']) ? esc_attr($this->options['login']) : ''
-		);
+        printf(
+            '<input class="regular-text" type="text" name="idosell[login]" id="idosell_login" value="%s">',
+            isset($this->options['login']) ? esc_attr($this->options['login']) : ''
+        );
 	}
 	public function passwordCallback(): void
 	{
 		printf(
-			'<input class="regular-text" type="password" name="idosell[password]" id="idosell_password">',
-			isset($this->options['password']) ? esc_attr($this->options['password']) : ''
+			'<input class="regular-text" type="password" name="idosell[password]" id="idosell_password" value="%s">',
+			''
 		);
 	}
 

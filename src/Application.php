@@ -16,8 +16,8 @@ class Application
 
   public function run()
   {
-	  $settings = new Settings();
-		$tags = new Tags();
-		$importer = new Importer();
+    $settings = new Settings();
+    $tags = new Tags();
+    $importer = new Importer();
   }
 }

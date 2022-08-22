@@ -17,18 +17,18 @@ class Importer
 		$this->options = get_option('idosell');
 
 		if(isset($_GET['idosell_import'])){
-            $sql = "DROP TABLE `" . $wpdb->prefix.$this->table_name . "`;" ;
-            $wpdb->query($sql);
+			$sql = "DROP TABLE `" . $wpdb->prefix.$this->table_name . "`;" ;
+			$wpdb->query($sql);
 
-            $sql = "CREATE TABLE `" . $wpdb->prefix.$this->table_name . "` (
-                            `id` int(10) NOT NULL,
-                            `code_producer` VARCHAR(25) NULL,
-                            `product_sizecode` VARCHAR(25) NULL,
-                            `sku` VARCHAR(25) NULL,
-                            `price` VARCHAR(45) NULL,
-                            PRIMARY KEY (`id`)
-                            );" ;
-            $wpdb->query($sql);
+			$sql = "CREATE TABLE `" . $wpdb->prefix.$this->table_name . "` (
+											`id` int(10) NOT NULL,
+											`code_producer` VARCHAR(25) NULL,
+											`product_sizecode` VARCHAR(25) NULL,
+											`sku` VARCHAR(25) NULL,
+											`price` VARCHAR(45) NULL,
+											PRIMARY KEY (`id`)
+											);" ;
+			$wpdb->query($sql);
 
 			add_action( 'wp_loaded', [$this, 'import'] );
 		}
@@ -194,9 +194,6 @@ class Importer
 				$upsert        = $wpdb->prepare( $sql, get_object_vars( $product )['@attributes']['id'], get_object_vars( $product->srp )['@attributes']['gross'] ?: null, get_object_vars( $product->srp )['@attributes']['gross'] ?: null );
 				$rows_affected = $wpdb->query( $upsert );
 			}
-
-			wp_redirect( admin_url() . 'options-general.php?page=idosell&sync=' . $rows_affected );
-			exit;
 		} else {
 			throw new Exception( 'Request failed. XML URL not set in settings.' );
 		}
