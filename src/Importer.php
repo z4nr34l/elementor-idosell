@@ -98,20 +98,21 @@ class Importer
 
 		try {
 			$data       = $this->getAPIData(0);
-			$async_urls = [];
-			$products   = $data['results'];
+			if(!empty($data) && !empty($data['results'])) {
+				$async_urls = [];
+				$products   = $data['results'];
 
-			foreach($products as $product) {
-				$sql    = "INSERT INTO " . $wpdb->prefix.$this->table_name . " (id, code_producer, product_sizecode, sku, price) VALUES (%d, %s, %s, %s, %f) ON DUPLICATE KEY UPDATE price = %f";
-				$upsert = $wpdb->prepare($sql, $product['productId'], $product['productSizesAttributes'][0]['productSizeCodeExternal'] ?: "", $product['productSizesAttributes'][0]['productSizeCodeProducer'] ?: "", $product['productDisplayedCode'] ?: "", $product['productRetailPrice'] ?: null, $product['productRetailPrice'] ?: null);
-				$wpdb->query($upsert);
-			}
+				foreach($products as $product) {
+					$sql    = "INSERT INTO " . $wpdb->prefix.$this->table_name . " (id, code_producer, product_sizecode, sku, price) VALUES (%d, %s, %s, %s, %f) ON DUPLICATE KEY UPDATE price = %f";
+					$upsert = $wpdb->prepare($sql, $product['productId'], $product['productSizesAttributes'][0]['productSizeCodeExternal'] ?: "", $product['productSizesAttributes'][0]['productSizeCodeProducer'] ?: "", $product['productDisplayedCode'] ?: "", $product['productRetailPrice'] ?: null, $product['productRetailPrice'] ?: null);
+					$wpdb->query($upsert);
+				}
 
-			for ($i = 1; $i <= $data['resultsNumberPage']; $i++) {
-				$async_urls[] = admin_url()."/options-general.php?page=idosell&idosell_async_import=1&idosell_async_page=" . $i;
-			}
+				for ($i = 1; $i <= $data['resultsNumberPage']; $i++) {
+					$async_urls[] = admin_url()."/options-general.php?page=idosell&idosell_async_import=1&idosell_async_page=" . $i;
+				}
 
-			echo "<style>html,body {margin: 0; padding: 0; position: relative;}</style><div style='width: 100vw; height: 100vh; display: flex; flex-direction: column; align-content: center; justify-content: center;'><p style='font-size: 21px; text-align: center; margin: 0;'>Sync progress:</p><p style='text-align: center; margin: 0; font-size: 42px; font-weight: 800;' id='progress-percentage'>0 %</p><p style='font-size: 14px; margin: 25px 0 0 0; text-align: center;'>(don't close the window, will close itself when finished)</p></div>
+				echo "<style>html,body {margin: 0; padding: 0; position: relative;}</style><div style='width: 100vw; height: 100vh; display: flex; flex-direction: column; align-content: center; justify-content: center;'><p style='font-size: 21px; text-align: center; margin: 0;'>Sync progress:</p><p style='text-align: center; margin: 0; font-size: 42px; font-weight: 800;' id='progress-percentage'>0 %</p><p style='font-size: 14px; margin: 25px 0 0 0; text-align: center;'>(don't close the window, will close itself when finished)</p></div>
 						<script type='text/javascript'>
 						let initData = { 
             	currentPage: 0, 
@@ -141,6 +142,7 @@ class Importer
             }
             </script>
 						";
+			}
     } catch(Exception $exception) {
 			error_log($exception);
 			wp_redirect(admin_url().'options-general.php?page=idosell&sync=0');
